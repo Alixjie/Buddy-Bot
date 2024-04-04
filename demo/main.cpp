@@ -50,14 +50,15 @@ int main(int argc, const char *argv[]) {
         exit(-1);
     }
 
+    sl_lidar_response_device_health_t health_info;
+    sl_lidar_response_device_info_t dev_info;
     do {
         sl::IChannel *channel = *sl::createSerialPortChannel("/dev/ttyUSB0", 115200);
 
         if (SL_IS_FAIL(lidar->connect(channel)))
             std::cerr << "Error, cannot bind to the specified serial port /dev/ttyUSB0" << std::endl;
 
-        sl_lidar_response_device_info_t devinfo;
-        sl_result operat_result = lidar->getDeviceInfo(devinfo);
+        sl_result operat_result = lidar->getDeviceInfo(dev_info);
 
         if (SL_IS_FAIL(operat_result)) {
             if (operat_result == SL_RESULT_OPERATION_TIMEOUT)
@@ -66,9 +67,8 @@ int main(int argc, const char *argv[]) {
                 std::cerr << "Error, unexpected error, code: " << operat_result << std::endl;
         }
 
-        std::cout << "Version: " << devinfo.hardware_version << std::endl;
+        std::cout << "Version: " << dev_info.hardware_version << std::endl;
 
-        sl_lidar_response_device_health_t health_info;
         operat_result = lidar->getHealth(health_info);
         if (SL_IS_OK(operat_result)) {
             std::cout << "Lidar health status : " << std::endl;
