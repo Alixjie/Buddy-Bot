@@ -27,16 +27,19 @@ static inline void delay(unsigned long sec) {
 sl_result get_point_info_one_cycle(sl::ILidarDriver *drv) {
     sl_lidar_response_measurement_node_hq_t nodes[8192];
     size_t count = count_of(nodes);
+    std::cout << "Count before getting the data: " << count << std::endl;
 
     std::cout << "waiting for data..." << std::endl;
 
     sl_result result = drv->grabScanDataHq(nodes, count, 0);
+    std::cout << "Count after getting the data: " << count << std::endl;
     if (SL_IS_OK(result) || result == SL_RESULT_OPERATION_TIMEOUT) {
         drv->ascendScanData(nodes, count);
 
         for (int num = 0; num < (int) count; ++num) {
-            std::cout << "Theta: " << std::setprecision(4) << nodes[num].angle_z_q14 * 90.f / 16384.f;
-            std::cout << "Distance: " << nodes[num].dist_mm_q2 / 4.0f << std::endl;
+            std::cout << "Theta: " << std::fixed << std::setprecision(2) << nodes[num].angle_z_q14 * 90.f / 16384.f;
+            std::cout << "  Distance: " << nodes[num].dist_mm_q2 / 4.0f;
+            std::cout << "  Quality: " << (nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) << std::endl;
         }
     } else
         std::cerr << "error code: " << result << std::endl;
@@ -53,7 +56,7 @@ int main(int argc, const char *argv[]) {
     sl_lidar_response_device_health_t health_info;
     sl_lidar_response_device_info_t dev_info;
     do {
-        sl::IChannel *channel = *sl::createSerialPortChannel("/dev/ttyUSB0", 115200);
+        sl::IChannel *channel = *sl::createSerialPortChannel("/dev/ttyUSB0", 460800);
 
         if (SL_IS_FAIL(lidar->connect(channel)))
             std::cerr << "Error, cannot bind to the specified serial port /dev/ttyUSB0" << std::endl;
@@ -67,11 +70,11 @@ int main(int argc, const char *argv[]) {
                 std::cerr << "Error, unexpected error, code: " << operat_result << std::endl;
         }
 
-        std::cout << "Version: " << dev_info.hardware_version << std::endl;
+        std::cout << "Version: " << (int)dev_info.hardware_version << std::endl;
 
         operat_result = lidar->getHealth(health_info);
         if (SL_IS_OK(operat_result)) {
-            std::cout << "Lidar health status : " << std::endl;
+            std::cout << "Lidar health status : ";
             switch (health_info.status) {
                 case SL_LIDAR_STATUS_OK:
                     std::cout << "OK!";
@@ -83,7 +86,7 @@ int main(int argc, const char *argv[]) {
                     std::cout << "Error!";
                     break;
             }
-            std::cerr << "errorcode: " << health_info.error_code;
+            std::cerr << std::endl << "errorcode: " << health_info.error_code << std::endl;
 
         } else {
             std::cerr << "Error, cannot retrieve the lidar health code: " << operat_result << std::endl;
