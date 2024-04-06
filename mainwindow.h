@@ -25,16 +25,21 @@ public:
     ~MainWindow();
 
     void paintEvent(QPaintEvent *event);
+    void timerEvent(QTimerEvent *event);
+
     sl_result get_point_info_one_cycle(sl::ILidarDriver *drv);
+    int get_lidar_point_info();
 
 public slots:
-    int get_lidar_point_info();
+    void start_lidar();
+    void end_lidar();
 
 private:
     Ui::MainWindow *ui;
     sl_lidar_response_measurement_node_hq_t nodes[8192];
     size_t count;
-
-    QPoint origin_point;
+    sl::ILidarDriver *lidar;
+    int num_paint;
+    int timer_id;
 };
 #endif // MAINWINDOW_H

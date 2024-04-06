@@ -16,58 +16,12 @@ static inline void delay(unsigned long sec) {
 
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent), ui(new Ui::MainWindow) {
-    origin_point.setX(200);
-    origin_point.setY(100);
     ui->setupUi(this);
 
-    connect(ui->show_lidar_info, &QPushButton::clicked, this, &MainWindow::get_lidar_point_info);
-}
+    connect(ui->start_lidar, &QPushButton::clicked, this, &MainWindow::start_lidar);
+    connect(ui->end_lidar, &QPushButton::clicked, this, &MainWindow::end_lidar);
 
-void MainWindow::paintEvent(QPaintEvent *event) {
-    QPainter painter(this);
-    QPen pen1(Qt::blue, 5, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
-    painter.setPen(pen1);
-
-    painter.drawPoint(origin_point);
-
-    QPen pen2(Qt::red, 5, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
-    painter.setPen(pen2);
-
-    for (int num = 0; num < (int) count; ++num) {
-        std::cout << "Theta: " << std::fixed << std::setprecision(2) << nodes[num].angle_z_q14 * 90.f / 16384.f;
-        std::cout << "  Distance: " << nodes[num].dist_mm_q2 / 4.0f;
-        std::cout << "  Quality: " << (nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) << std::endl;
-
-        if ((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) {
-            double x = origin_point.x + (nodes[num].dist_mm_q2 / 4.0f) * sin(nodes[num].angle_z_q14 * 90.f / 16384.f);
-            double y = origin_point.y - (nodes[num].dist_mm_q2 / 4.0f) * cos(nodes[num].angle_z_q14 * 90.f / 16384.f);
-
-            double x_grid = x / 20;
-            double y_grid = y / 20;
-            painter.drawPoint(QPoint(int(x_grid), int(y_grid)));
-        }
-    }
-}
-
-sl_result MainWindow::get_point_info_one_cycle(sl::ILidarDriver *drv) {
-    count = count_of(nodes);
-    std::cout << "Count before getting the data: " << count << std::endl;
-
-    std::cout << "waiting for data..." << std::endl;
-
-    sl_result result = drv->grabScanDataHq(nodes, count, 0);
-    std::cout << "Count after getting the data: " << count << std::endl;
-    if (SL_IS_OK(result) || result == SL_RESULT_OPERATION_TIMEOUT) {
-        drv->ascendScanData(nodes, count);
-
-        update();
-    } else
-        std::cerr << "error code: " << result << std::endl;
-    return result;
-}
-
-int MainWindow::get_lidar_point_info() {
-    sl::ILidarDriver *lidar = *sl::createLidarDriver();
+    lidar = *sl::createLidarDriver();
     if (!lidar) {
         std::cerr << "Insufficent memory, exit" << std::endl;
         exit(-1);
@@ -75,7 +29,7 @@ int MainWindow::get_lidar_point_info() {
 
     sl_lidar_response_device_health_t health_info;
     sl_lidar_response_device_info_t dev_info;
-    do {
+
         sl::IChannel *channel = *sl::createSerialPortChannel("/dev/ttyUSB0", 460800);
 
         if (SL_IS_FAIL(lidar->connect(channel)))
@@ -108,32 +62,94 @@ int MainWindow::get_lidar_point_info() {
             }
             std::cerr << std::endl << "errorcode: " << health_info.error_code << std::endl;
 
-        } else {
+        } else
             std::cerr << "Error, cannot retrieve the lidar health code: " << operat_result << std::endl;
-            break;
-        }
+
 
         if (health_info.status == SL_LIDAR_STATUS_ERROR) {
             std::cerr << "Error, slamtec lidar internal error detected. Please reboot the device to retry" << std::endl;
             lidar->reset();
-            break;
         }
 
         lidar->setMotorSpeed();
 
         if (SL_IS_FAIL(lidar->startScan(0, 1))) {
             std::cerr << "Error, cannot start the scan operation" << std::endl;
-            break;
         }
 
+        num_paint = 0;
         delay(3000);
+}
 
-        if (SL_IS_FAIL(get_point_info_one_cycle(lidar))) {
-            std::cerr << "Error, cannot grab scan data" << std::endl;
-            break;
+void MainWindow::paintEvent(QPaintEvent *event) {
+    if (num_paint > 10) {
+    QPainter painter(this);
+    QPen pen1(Qt::blue, 5, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
+    painter.setPen(pen1);
+
+    QPoint origin_point(300, 300);
+
+    painter.drawPoint(origin_point);
+
+    QPen pen2(Qt::red, 5, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
+    painter.setPen(pen2);
+
+    for (int num = 0; num < (int) count; ++num) {
+//        std::cout << "Theta: " << std::fixed << std::setprecision(2) << nodes[num].angle_z_q14 * 90.f / 16384.f;
+//        std::cout << "  Distance: " << nodes[num].dist_mm_q2 / 4.0f;
+//        std::cout << "  Quality: " << (nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) << std::endl;
+
+        if ((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) {
+            double x = origin_point.x() + (nodes[num].dist_mm_q2 / 4.0f) * sin(nodes[num].angle_z_q14 * 90.f / 16384.f);
+            double y = origin_point.y() - (nodes[num].dist_mm_q2 / 4.0f) * cos(nodes[num].angle_z_q14 * 90.f / 16384.f);
+
+            painter.drawPoint(QPoint(int(x), int(y)));
         }
-    } while (0);
+    }
+    }
+    ++num_paint;
+}
 
+void MainWindow::timerEvent(QTimerEvent *event)
+{
+    get_lidar_point_info();
+}
+
+sl_result MainWindow::get_point_info_one_cycle(sl::ILidarDriver *drv) {
+    count = count_of(nodes);
+    std::cout << "Count before getting the data: " << count << std::endl;
+
+    std::cout << "waiting for data..." << std::endl;
+
+    sl_result result = drv->grabScanDataHq(nodes, count, 0);
+    std::cout << "Count after getting the data: " << count << std::endl;
+    if (SL_IS_OK(result) || result == SL_RESULT_OPERATION_TIMEOUT) {
+        drv->ascendScanData(nodes, count);
+
+        update();
+    } else
+        std::cerr << "error code: " << result << std::endl;
+    return result;
+}
+
+int MainWindow::get_lidar_point_info() {
+    if (SL_IS_FAIL(get_point_info_one_cycle(lidar)))
+        std::cerr << "Error, cannot grab scan data" << std::endl;
+
+    return 0;
+}
+
+void MainWindow::start_lidar()
+{
+    timer_id = startTimer(200);
+}
+
+void MainWindow::end_lidar()
+{
+    killTimer(timer_id);
+}
+
+MainWindow::~MainWindow() {
     lidar->stop();
     delay(20);
     lidar->setMotorSpeed(0);
@@ -142,10 +158,6 @@ int MainWindow::get_lidar_point_info() {
         delete lidar;
         lidar = nullptr;
     }
-    return 0;
-}
-
-MainWindow::~MainWindow() {
     delete ui;
 }
 
