@@ -17,24 +17,27 @@ static inline void delay(unsigned long sec) {
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
+
+    connect(ui->show_lidar_info, &QPushButton::clicked, this, &MainWindow::get_lidar_point_info);
 }
 
 void MainWindow::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-    painter.setBrush(Qt::blue); // 设置画刷颜色为蓝色
-    painter.setWidth(15);
+    QPen pen(Qt::blue, 5, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
+    painter.setPen(pen);
+
     for (int num = 0; num < (int) count; ++num) {
         std::cout << "Theta: " << std::fixed << std::setprecision(2) << nodes[num].angle_z_q14 * 90.f / 16384.f;
         std::cout << "  Distance: " << nodes[num].dist_mm_q2 / 4.0f;
         std::cout << "  Quality: " << (nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) << std::endl;
 
-        if (nodes[num] != 0) {
+        if ((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) {
             painter.drawPoint(int(nodes[num].angle_z_q14 * 90.f / 16384.f), int(nodes[num].dist_mm_q2 / 4.0f));
         }
     }
 }
 
-void MainWindow::get_point_info_one_cycle(sl::ILidarDriver *drv) {
+sl_result MainWindow::get_point_info_one_cycle(sl::ILidarDriver *drv) {
     count = count_of(nodes);
     std::cout << "Count before getting the data: " << count << std::endl;
 

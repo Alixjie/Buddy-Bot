@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPainter>
 
 #include "sl_lidar.h"
 #include <iostream>
@@ -25,7 +26,7 @@ public:
     void paintEvent(QPaintEvent *event);
     sl_result get_point_info_one_cycle(sl::ILidarDriver *drv);
 
-public:
+public slots:
     int get_lidar_point_info();
 
 private:
