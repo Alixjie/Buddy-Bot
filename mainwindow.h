@@ -10,6 +10,7 @@
 #include <string>
 #include <unistd.h>
 #include <iomanip>
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,5 +34,7 @@ private:
     Ui::MainWindow *ui;
     sl_lidar_response_measurement_node_hq_t nodes[8192];
     size_t count;
+
+    QPoint origin_point;
 };
 #endif // MAINWINDOW_H

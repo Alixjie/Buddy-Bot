@@ -16,6 +16,8 @@ static inline void delay(unsigned long sec) {
 
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent), ui(new Ui::MainWindow) {
+    origin_point.setX(200);
+    origin_point.setY(100);
     ui->setupUi(this);
 
     connect(ui->show_lidar_info, &QPushButton::clicked, this, &MainWindow::get_lidar_point_info);
@@ -23,8 +25,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-    QPen pen(Qt::blue, 5, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
-    painter.setPen(pen);
+    QPen pen1(Qt::blue, 5, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
+    painter.setPen(pen1);
+
+    painter.drawPoint(origin_point);
+
+    QPen pen2(Qt::red, 5, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
+    painter.setPen(pen2);
 
     for (int num = 0; num < (int) count; ++num) {
         std::cout << "Theta: " << std::fixed << std::setprecision(2) << nodes[num].angle_z_q14 * 90.f / 16384.f;
@@ -32,7 +39,12 @@ void MainWindow::paintEvent(QPaintEvent *event) {
         std::cout << "  Quality: " << (nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) << std::endl;
 
         if ((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) {
-            painter.drawPoint(int(nodes[num].angle_z_q14 * 90.f / 16384.f), int(nodes[num].dist_mm_q2 / 4.0f));
+            double x = origin_point.x + (nodes[num].dist_mm_q2 / 4.0f) * sin(nodes[num].angle_z_q14 * 90.f / 16384.f);
+            double y = origin_point.y - (nodes[num].dist_mm_q2 / 4.0f) * cos(nodes[num].angle_z_q14 * 90.f / 16384.f);
+
+            double x_grid = x / 20;
+            double y_grid = y / 20;
+            painter.drawPoint(QPoint(int(x_grid), int(y_grid)));
         }
     }
 }
