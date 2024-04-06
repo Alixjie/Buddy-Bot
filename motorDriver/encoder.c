@@ -3,7 +3,7 @@
 
 #include <pigpio.h>
 
-#include <encoder.h>
+#include "encoder.h"
 
 struct _Pi_Renc_s
 {

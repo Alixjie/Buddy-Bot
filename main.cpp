@@ -1,52 +1,27 @@
-//
-// Created by George on 2024/4/4.
-//
+#include <QWidget>
+#include <QPainter>
+#include <QApplication>
 
+#include "sl_lidar.h"
 #include <iostream>
 #include <cstdlib>
 #include <string>
 #include <unistd.h>
 #include <iomanip>
+ 
+class MyWidget : public QWidget {
+    void paintEvent(QPaintEvent *event) override {
+        QPainter painter(this);
+        painter.setPen(Qt::blue); // 设置画笔颜色为蓝色
+        painter.setBrush(Qt::blue); // 设置画刷颜色为蓝色
+        painter.drawPoint(50, 50); // 在位置(50, 50)画一个点
+    }
+};
+ 
+int main(int argc, char *argv[]) {
+    QApplication a(argc, argv);
 
-#include "sl_lidar.h"
-#include "sl_lidar_driver.h"
 
-#ifndef count_of
-#define count_of(array) (int)(sizeof (array) / sizeof (array[0]))
-#endif
-
-static inline void delay(unsigned long sec) {
-    while (sec >= 1000) {
-        usleep(1000 * 1000);
-        sec -= 1000;
-    };
-    if (sec != 0)
-        usleep(sec * 1000);
-}
-
-sl_result get_point_info_one_cycle(sl::ILidarDriver *drv) {
-    sl_lidar_response_measurement_node_hq_t nodes[8192];
-    size_t count = count_of(nodes);
-    std::cout << "Count before getting the data: " << count << std::endl;
-
-    std::cout << "waiting for data..." << std::endl;
-
-    sl_result result = drv->grabScanDataHq(nodes, count, 0);
-    std::cout << "Count after getting the data: " << count << std::endl;
-    if (SL_IS_OK(result) || result == SL_RESULT_OPERATION_TIMEOUT) {
-        drv->ascendScanData(nodes, count);
-
-        for (int num = 0; num < (int) count; ++num) {
-            std::cout << "Theta: " << std::fixed << std::setprecision(2) << nodes[num].angle_z_q14 * 90.f / 16384.f;
-            std::cout << "  Distance: " << nodes[num].dist_mm_q2 / 4.0f;
-            std::cout << "  Quality: " << (nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) << std::endl;
-        }
-    } else
-        std::cerr << "error code: " << result << std::endl;
-    return result;
-}
-
-int main(int argc, const char *argv[]) {
     sl::ILidarDriver *lidar = *sl::createLidarDriver();
     if (!lidar) {
         std::cerr << "Insufficent memory, exit" << std::endl;
@@ -98,31 +73,10 @@ int main(int argc, const char *argv[]) {
             lidar->reset();
             break;
         }
-
-        lidar->setMotorSpeed();
-
-        if (SL_IS_FAIL(lidar->startScan(0, 1))) {
-            std::cerr << "Error, cannot start the scan operation" << std::endl;
-            break;
-        }
-
-        delay(3000);
-
-        if (SL_IS_FAIL(get_point_info_one_cycle(lidar))) {
-            std::cerr << "Error, cannot grab scan data" << std::endl;
-            break;
-        }
-    } while (0);
-
-    lidar->stop();
-    delay(20);
-    lidar->setMotorSpeed(0);
-
-    if (lidar) {
-        delete lidar;
-        lidar = nullptr;
-    }
-    return 0;
+    } while(0);
+ 
+    MyWidget widget;
+    widget.show();
+ 
+    return a.exec();
 }
-
-
