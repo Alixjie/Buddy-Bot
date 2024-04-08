@@ -84,14 +84,14 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::paintEvent(QPaintEvent *event) {
     if (num_paint > 10) {
     QPainter painter(this);
-    QPen pen1(Qt::blue, 5, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
+    QPen pen1(Qt::blue, 8, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
     painter.setPen(pen1);
 
     QPoint origin_point(300, 300);
 
     painter.drawPoint(origin_point);
 
-    QPen pen2(Qt::red, 5, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
+    QPen pen2(Qt::red, 6, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
     painter.setPen(pen2);
 
     for (int num = 0; num < (int) count; ++num) {
@@ -100,10 +100,12 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 //        std::cout << "  Quality: " << (nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) << std::endl;
 
         if ((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) {
-            double x = origin_point.x() + (nodes[num].dist_mm_q2 / 4.0f) * sin(nodes[num].angle_z_q14 * 90.f / 16384.f);
-            double y = origin_point.y() - (nodes[num].dist_mm_q2 / 4.0f) * cos(nodes[num].angle_z_q14 * 90.f / 16384.f);
+            double x = origin_point.x() + (nodes[num].dist_mm_q2 / 4.0f) * sin((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
+            double y = origin_point.y() - (nodes[num].dist_mm_q2 / 4.0f) * cos((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
 
             painter.drawPoint(QPoint(int(x), int(y)));
+
+            //painter.drawPoint(int(nodes[num].angle_z_q14 * 90.f / 16384.f), int(nodes[num].dist_mm_q2 / 4.0f));
         }
     }
     }
@@ -141,7 +143,7 @@ int MainWindow::get_lidar_point_info() {
 
 void MainWindow::start_lidar()
 {
-    timer_id = startTimer(200);
+    timer_id = startTimer(110);
 }
 
 void MainWindow::end_lidar()
