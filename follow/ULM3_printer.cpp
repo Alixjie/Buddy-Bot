@@ -52,14 +52,14 @@ class ULM3PDOAprintSampleCallback : public ULM3PDOACallback {
         return car_velocity;
     }
 
-    virtual void hasSample(char *uwb_chars, size_t length)
+    virtual void hasSample(simple_string &uwb_string)
     {
         // velocity temp = control_velocity(uwb_chars);
         // std::cout << "Speed: " << temp.speed << " Degree: " << temp.degree
         //         << '\n';
         // printf("%s\n", uwb_chars);
-        for (int i = 0; i < length; i++) {
-            std::cout << uwb_chars[i];
+        for (int i = 0; i < uwb_string.length; i++) {
+            std::cout << uwb_string.str[i];
         }
     }
 };

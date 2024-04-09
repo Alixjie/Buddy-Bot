@@ -20,12 +20,18 @@ typedef struct uwb_sample {
     int pdoa_offset_deg;
 } uwb_sample;
 
+typedef struct simple_string {
+    char *str;
+    size_t length;
+    size_t capacity;
+} simple_string;
+
 /**
  * Callback of the ULM3_PDOA
  **/
 class ULM3PDOACallback {
 public:
-    virtual void hasSample(char *uwb_string, size_t length) = 0;
+    virtual void hasSample(simple_string &uwb_string) = 0;
 };
 
 class ULM3PDOAComm {
@@ -68,6 +74,7 @@ private:
     int running_ = 0;
     int fd_;
     std::thread daq_thread_;
+    simple_string buffer;
     ULM3PDOACallback *ulm3_pdoa_callback_ = nullptr;
 
     struct termios serial_port_setting_;

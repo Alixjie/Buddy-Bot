@@ -18,6 +18,10 @@ void ULM3PDOAComm::openDev(char* dev_name)
 
 ULM3PDOAComm::ULM3PDOAComm(char* port_name)
 {
+    buffer.str = new char[1024];
+    buffer.length = 0;
+    buffer.capacity = 1024;
+
     openDev(port_name);
     if (tcgetattr(fd_, &serial_port_setting_)) {
         close(fd_);
@@ -52,6 +56,7 @@ ULM3PDOAComm::~ULM3PDOAComm()
 {
     stop();
     close(fd_);
+    delete[] buffer.str;
 }
 
 void ULM3PDOAComm::registerCallback(ULM3PDOACallback* cb)
@@ -63,15 +68,15 @@ void ULM3PDOAComm::unregisterCallback() { ulm3_pdoa_callback_ = nullptr; }
 
 void ULM3PDOAComm::run()
 {
-    char buffer[1024];
     ssize_t bytesRead;
     running_ = 1;
     while (running_) {
-        bytesRead = read(fd_, buffer, sizeof(buffer));
+        bytesRead = read(fd_, buffer.str, buffer.capacity);
+        buffer.length = bytesRead;
         /*for (int i = 0; i < bytesRead; i++) {
             std::cout << buffer[i];
         }*/
-        ulm3_pdoa_callback_->hasSample(buffer, bytesRead);
+        ulm3_pdoa_callback_->hasSample(buffer);
     }
     close(fd_);
 }
