@@ -9,7 +9,7 @@
 
 void ULM3PDOAComm::openDev(char* dev_name)
 {
-    fd_ = open(dev_name, O_RDONLY | O_NOCTTY);
+    fd_ = open(dev_name, O_RDONLY | O_NOCTTY | O_RSYNC);
     if (-1 == fd_) {
         std::cerr << "Error opening serial port.";
         return;
@@ -38,14 +38,15 @@ ULM3PDOAComm::ULM3PDOAComm(char* port_name)
     serial_port_setting_.c_cflag &= ~CSIZE;
     serial_port_setting_.c_cflag |= CS8;
 
-    serial_port_setting_.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
-    serial_port_setting_.c_iflag &= ~(INPCK | ISTRIP);
+    // serial_port_setting_.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+    serial_port_setting_.c_lflag |= ICANON;
+    serial_port_setting_.c_iflag &= ~(INPCK | ISTRIP | INLCR | ICRNL | IGNCR);
     serial_port_setting_.c_oflag &= ~OPOST;
 
     serial_port_setting_.c_cc[VMIN] = 1;
     serial_port_setting_.c_cc[VTIME] = 0;
 
-    if (tcsetattr(fd_, TCSANOW, &serial_port_setting_)) {
+    if (tcsetattr(fd_, TCSAFLUSH, &serial_port_setting_)) {
         close(fd_);
         std::cerr << "Error setting serial port attributes.";
         return;
@@ -56,7 +57,9 @@ ULM3PDOAComm::~ULM3PDOAComm()
 {
     stop();
     close(fd_);
-    delete[] buffer.str;
+    if (buffer.str != nullptr) {
+        delete[] buffer.str;
+    }
 }
 
 void ULM3PDOAComm::registerCallback(ULM3PDOACallback* cb)

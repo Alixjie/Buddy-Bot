@@ -1,46 +1,38 @@
 #include <cstddef>
+#include <cstdint>
 #include <cstdio>
+#include <cstring>
 #include <iostream>
+#include <string>
 
 #include "ULM3_PDOAComm.h"
 
 class ULM3PDOAprintSampleCallback : public ULM3PDOACallback {
-    typedef struct uwb_data {
-        int tag_id;
-        int x_cm;
-        int y_cm;
-        int distance_cm;
-        int range_num;
-        float pdoa_deg;
-        float aoa_deg;
-        int distance_offset_cm;
-        int pdoa_offset_deg;
-    } uwb_data;
+public:
+    typedef struct location_data {
+        int speed;
+        double degree;
+        double distance;
+    } location_data;
 
-    typedef struct velocity {
-        float speed;
-        float degree;
-    } velocity;
-
-    // "MP0036,0,23,0,122,119,-156.33,-70.32,52,16"
-    void pretreatment(const char *s, uwb_data &received_data)
+    ULM3PDOAprintSampleCallback()
     {
-        int temp;
-        sscanf(s, "MP%d,%d,%d,%d,%d,%d,%f,%f,%d,%d", &temp,
-               &received_data.tag_id, &received_data.x_cm, &received_data.y_cm,
-               &received_data.distance_cm, &received_data.range_num,
-               &received_data.pdoa_deg, &received_data.aoa_deg,
-               &received_data.distance_offset_cm,
-               &received_data.pdoa_offset_deg);
+        split_buffer_ = nullptr;
+        sample_counter = 0;
+    }
 
-        if (received_data.distance_cm < 0) {
-            received_data.distance_cm = -received_data.distance_cm;
+    ~ULM3PDOAprintSampleCallback()
+    {
+        if (split_buffer_ != nullptr) {
+            delete[] split_buffer_;
         }
     }
 
-    velocity &control_velocity(const char *reveived_char)
+    // "MP0036,0,23,0,122,119,-156.33,-70.32,52,16"
+
+    /* velocity &control_velocity(const char *reveived_char)
     {
-        uwb_data current_data;
+        uwb_sample current_data;
         static velocity car_velocity = {10, 0};
         static int speed_step = 4;
 
@@ -50,16 +42,42 @@ class ULM3PDOAprintSampleCallback : public ULM3PDOACallback {
         car_velocity.speed = 50;
 
         return car_velocity;
+    } */
+
+    virtual void hasSample(const simple_string &uwb_string)
+    {
+        /*if (++sample_counter < 5) {
+            return;
+        }*/
+        uwb_sample temp_sample;
+        pretreatment(uwb_string, temp_sample);
+        std::cout << " Distance: " << temp_sample.distance_cm
+                  << " Degree: " << temp_sample.aoa_deg
+                  << " Range: " << temp_sample.range_num << '\n';
     }
 
-    virtual void hasSample(simple_string &uwb_string)
+private:
+    char *split_buffer_ = nullptr;
+    uint_fast8_t sample_counter;
+
+    void pretreatment(const simple_string &sip_str, uwb_sample &received_data)
     {
-        // velocity temp = control_velocity(uwb_chars);
-        // std::cout << "Speed: " << temp.speed << " Degree: " << temp.degree
-        //         << '\n';
-        // printf("%s\n", uwb_chars);
-        for (int i = 0; i < uwb_string.length; i++) {
-            std::cout << uwb_string.str[i];
+        if (split_buffer_ == nullptr) {
+            split_buffer_ = new char[sip_str.capacity];
+        }
+        memcpy(split_buffer_, sip_str.str, sip_str.length);
+        split_buffer_[sip_str.length] = '\0';
+
+        int temp;
+        sscanf(split_buffer_, "MP%d,%d,%d,%d,%d,%d,%lf,%lf,%d,%d", &temp,
+               &received_data.tag_id, &received_data.x_cm, &received_data.y_cm,
+               &received_data.distance_cm, &received_data.range_num,
+               &received_data.pdoa_deg, &received_data.aoa_deg,
+               &received_data.distance_offset_cm,
+               &received_data.pdoa_offset_deg);
+
+        if (received_data.distance_cm < 0) {
+            received_data.distance_cm = -received_data.distance_cm;
         }
     }
 };

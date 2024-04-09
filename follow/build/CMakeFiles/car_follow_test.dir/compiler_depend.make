@@ -350,6 +350,8 @@ CMakeFiles/car_follow_test.dir/ULM3_printer.cpp.o: /home/abel/GitHub/Buddy-Bot/f
   /usr/include/stdint.h \
   /usr/include/stdio.h \
   /usr/include/stdlib.h \
+  /usr/include/string.h \
+  /usr/include/strings.h \
   /usr/include/sys/cdefs.h \
   /usr/include/sys/ioctl.h \
   /usr/include/sys/select.h \
@@ -430,6 +432,7 @@ CMakeFiles/car_follow_test.dir/ULM3_printer.cpp.o: /home/abel/GitHub/Buddy-Bot/f
   /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/g++-v13/cstdint \
   /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/g++-v13/cstdio \
   /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/g++-v13/cstdlib \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/g++-v13/cstring \
   /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/g++-v13/ctime \
   /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/g++-v13/cwchar \
   /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/g++-v13/cwctype \
@@ -475,6 +478,10 @@ CMakeFiles/car_follow_test.dir/ULM3_printer.cpp.o: /home/abel/GitHub/Buddy-Bot/f
   /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/stddef.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/stdint.h
 
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/13/include/g++-v13/cstring:
+
+/usr/include/string.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/stdarg.h:
 
@@ -685,6 +692,8 @@ CMakeFiles/car_follow_test.dir/ULM3_printer.cpp.o: /home/abel/GitHub/Buddy-Bot/f
 /usr/include/bits/byteswap.h:
 
 /usr/include/bits/termios.h:
+
+/usr/include/strings.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/13/include/g++-v13/bits/utility.h:
 

@@ -14,8 +14,8 @@ typedef struct uwb_sample {
     int y_cm;
     int distance_cm;
     int range_num;
-    float pdoa_deg;
-    float aoa_deg;
+    double pdoa_deg;
+    double aoa_deg;
     int distance_offset_cm;
     int pdoa_offset_deg;
 } uwb_sample;
@@ -31,7 +31,7 @@ typedef struct simple_string {
  **/
 class ULM3PDOACallback {
 public:
-    virtual void hasSample(simple_string &uwb_string) = 0;
+    virtual void hasSample(const simple_string &uwb_string) = 0;
 };
 
 class ULM3PDOAComm {
