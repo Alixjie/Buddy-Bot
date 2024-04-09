@@ -1,0 +1,90 @@
+#include "ULM3_PDOAComm.h"
+
+#include <fcntl.h>
+#include <termios.h>
+#include <unistd.h>
+
+#include <iostream>
+#include <thread>
+
+void ULM3PDOAComm::openDev(char* dev_name)
+{
+    fd_ = open(dev_name, O_RDONLY | O_NOCTTY);
+    if (-1 == fd_) {
+        std::cerr << "Error opening serial port.";
+        return;
+    }
+}
+
+ULM3PDOAComm::ULM3PDOAComm(char* port_name)
+{
+    openDev(port_name);
+    if (tcgetattr(fd_, &serial_port_setting_)) {
+        close(fd_);
+        std::cerr << "Error getting serial port attributes.";
+        return;
+    }
+
+    cfsetospeed(&serial_port_setting_, B115200);
+    cfsetispeed(&serial_port_setting_, B115200);
+
+    serial_port_setting_.c_cflag |= (CLOCAL | CREAD);
+    serial_port_setting_.c_cflag |= PARENB;
+    serial_port_setting_.c_cflag &= ~CSTOPB;
+    serial_port_setting_.c_cflag &= ~CSIZE;
+    serial_port_setting_.c_cflag |= CS8;
+
+    serial_port_setting_.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+    serial_port_setting_.c_iflag &= ~(INPCK | ISTRIP);
+    serial_port_setting_.c_oflag &= ~OPOST;
+
+    serial_port_setting_.c_cc[VMIN] = 1;
+    serial_port_setting_.c_cc[VTIME] = 0;
+
+    if (tcsetattr(fd_, TCSANOW, &serial_port_setting_)) {
+        close(fd_);
+        std::cerr << "Error setting serial port attributes.";
+        return;
+    }
+}
+
+ULM3PDOAComm::~ULM3PDOAComm()
+{
+    stop();
+    close(fd_);
+}
+
+void ULM3PDOAComm::registerCallback(ULM3PDOACallback* cb)
+{
+    ulm3_pdoa_callback_ = cb;
+}
+
+void ULM3PDOAComm::unregisterCallback() { ulm3_pdoa_callback_ = nullptr; }
+
+void ULM3PDOAComm::run()
+{
+    char buffer[1024];
+    ssize_t bytesRead;
+    running_ = 1;
+    while (running_) {
+        bytesRead = read(fd_, buffer, sizeof(buffer));
+        /*for (int i = 0; i < bytesRead; i++) {
+            std::cout << buffer[i];
+        }*/
+        ulm3_pdoa_callback_->hasSample(buffer, bytesRead);
+    }
+    close(fd_);
+}
+
+void ULM3PDOAComm::start()
+{
+    if (running_) return;
+    daq_thread_ = std::thread(&ULM3PDOAComm::run, this);
+}
+
+void ULM3PDOAComm::stop()
+{
+    if (!running_) return;
+    running_ = 0;
+    daq_thread_.join();
+}
