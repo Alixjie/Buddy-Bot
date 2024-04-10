@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QPainter>
 
-#include "sl_lidar.h"
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -12,8 +11,14 @@
 #include <iomanip>
 #include <cmath>
 
+#include "sl_lidar.h"
+#include "AStar.h"
+
 #define lidar_scan 1
 #define obstacle_avoidance 2
+
+#define test_x 128
+#define test_y 72
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -48,6 +53,8 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+
+    AStar star;
 
     sl_lidar_response_measurement_node_hq_t nodes[8192];
     size_t count;

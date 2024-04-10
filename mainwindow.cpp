@@ -26,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->quit_program, &QPushButton::clicked, this, &QApplication::quit);
 
+    AStar star = AStar(test_x, test_y);
+
     lidar = *sl::createLidarDriver();
     if (!lidar) {
         std::cerr << "Insufficent memory, exit" << std::endl;
@@ -147,6 +149,17 @@ void MainWindow::paintEvent(QPaintEvent *event) {
                     painter.drawPoint(QPoint(int(x), int(y)));
                 }
             }
+
+            std::list <Point> &returnList = star.getReturnList();
+            std::cout << "The way is" << " (" << returnList.size() << "): ";
+
+            for (std::list<Point>::iterator it = returnList.begin(); it != returnList.end(); ++it) {
+                painter.drawPoint(QPoint(int(it->x * 10), int(it->y * 10));
+                if ((it->x == star.getEndPoint().x) && (it->y == star.getEndPoint().y))
+                    std::cout << "( " << it->x << ", " << it->y << " )";
+                else
+                    std::cout << "( " << it->x << ", " << it->y << " )" << " -> ";
+            }
         }
     }
     ++num_paint;
@@ -165,6 +178,28 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     } else {
         get_lidar_point_info();
         get_uwb_point_info();
+
+        star.setStartPoint(Point(50, 70));
+        star.setEndPoint(Point(int(uwb_label_position.x / 10), int(uwb_label_position.y / 10)));
+
+        for (int num = 0; num < (int) count; ++num) {
+            if (((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) &&
+                (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 90) ||
+                 ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 270))) {
+                double x = origin_point.x() +
+                           (nodes[num].dist_mm_q2 / 4.0f) *
+                           sin((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
+                double y = origin_point.y() -
+                           (nodes[num].dist_mm_q2 / 4.0f) *
+                           cos((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
+                star.changeBlockState(int(x / 10), int(y / 10));
+            }
+        }
+        if (star.totalLogic())
+            std::cout << "Can arrive" << std::endl;
+        else
+            std::cout << "Can't arrive" << std::endl;
+
         update();
     }
 }
