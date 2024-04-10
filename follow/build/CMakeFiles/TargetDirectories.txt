@@ -1,3 +1,0 @@
-/home/abel/GitHub/Buddy-Bot/follow/build/CMakeFiles/queue_test.dir
-/home/abel/GitHub/Buddy-Bot/follow/build/CMakeFiles/edit_cache.dir
-/home/abel/GitHub/Buddy-Bot/follow/build/CMakeFiles/rebuild_cache.dir
