@@ -1,11 +1,6 @@
-#include "ULM3_PDOAComm.h"
-
-#include <fcntl.h>
-#include <termios.h>
-#include <unistd.h>
+#include "ulm3_pdoa_comm.h"
 
 #include <iostream>
-#include <thread>
 
 void ULM3PDOAComm::openDev(char* dev_name)
 {

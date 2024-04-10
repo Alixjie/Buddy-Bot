@@ -1,8 +1,7 @@
 #ifndef __UM3_PDOACOMM_H__
 #define __UM3_PDOACOMM_H__
-
 #include <fcntl.h>
-#include <termio.h>
+#include <termios.h>
 #include <unistd.h>
 
 #include <cstddef>

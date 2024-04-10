@@ -1,11 +1,11 @@
-#ifndef __ULM3_ACQUISTIONCALLBACK_H__
-#define __ULM3_ACQUISTIONCALLBACK_H__
+#ifndef __ULM3_ACQUISTION_CALLBACK_H__
+#define __ULM3_ACQUISTION_CALLBACK_H__
 
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
 
-#include "ULM3_PDOAComm.h"
+#include "ulm3_pdoa_comm.h"
 
 class ULM3AcquisitionCallback : public ULM3PDOACallback {
 public:
