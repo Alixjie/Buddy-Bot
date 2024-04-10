@@ -17,8 +17,8 @@
 #define lidar_scan 1
 #define obstacle_avoidance 2
 
-#define test_x 128
-#define test_y 72
+#define test_x 72
+#define test_y 128
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

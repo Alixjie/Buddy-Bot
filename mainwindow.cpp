@@ -179,8 +179,8 @@ void MainWindow::timerEvent(QTimerEvent *event) {
         get_lidar_point_info();
         get_uwb_point_info();
 
-        star.setStartPoint(Point(50, 70));
-        star.setEndPoint(Point(int(uwb_label_position.x / 10), int(uwb_label_position.y / 10)));
+        star.setStartPoint(Point(70, 50));
+        star.setEndPoint(Point(int(uwb_label_position.y / 10), int(uwb_label_position.x / 10)));
 
         for (int num = 0; num < (int) count; ++num) {
             if (((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) &&
@@ -192,7 +192,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
                 double y = origin_point.y() -
                            (nodes[num].dist_mm_q2 / 4.0f) *
                            cos((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
-                star.changeBlockState(int(x / 10), int(y / 10));
+                star.changeBlockState(int(y / 10), int(x / 10));
             }
         }
         if (star.totalLogic())
