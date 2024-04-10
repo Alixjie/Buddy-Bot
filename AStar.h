@@ -7,6 +7,7 @@
 
 #include <list>
 #include <climits>
+#include <cmath>
 
 struct Point {
     int x;

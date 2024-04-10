@@ -20,7 +20,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->start_lidar, &QPushButton::clicked, this, &MainWindow::start_lidar);
     connect(ui->end_lidar, &QPushButton::clicked, this, &MainWindow::end_lidar);
-    connect(ui->quit_program, &QPushButton::clicked, &app, &QApplication::quit);
+
+    connect(ui->start_obstacle_avoidance, &QPushButton::clicked, this, &MainWindow::start_obstacle_avoidance);
+    connect(ui->end_obstacle_avoidance, &QPushButton::clicked, this, &MainWindow::end_obstacle_avoidance);
+
+    connect(ui->quit_program, &QPushButton::clicked, this, &QApplication::quit);
 
     lidar = *sl::createLidarDriver();
     if (!lidar) {
@@ -172,7 +176,7 @@ sl_result MainWindow::get_point_info_one_cycle(sl::ILidarDriver *drv) {
     std::cout << "waiting for data..." << std::endl;
 
     sl_result result = drv->grabScanDataHq(nodes, count, 0);
-//    std::cout << "Count after getting the data: " << count << std::endl;
+    std::cout << "Count after getting the data: " << count << std::endl;
     if (SL_IS_OK(result) || result == SL_RESULT_OPERATION_TIMEOUT)
         drv->ascendScanData(nodes, count);
     else

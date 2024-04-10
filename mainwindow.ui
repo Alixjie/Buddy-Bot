@@ -17,9 +17,9 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>1070</x>
+      <x>910</x>
       <y>0</y>
-      <width>211</width>
+      <width>369</width>
       <height>221</height>
      </rect>
     </property>
@@ -49,18 +49,25 @@
       </layout>
      </item>
      <item>
+      <widget class="QPushButton" name="quit_program">
+       <property name="text">
+        <string>Quit</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="start_obstacle_avoidance">
          <property name="text">
-          <string>PushButton</string>
+          <string>obstacle avoidance</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="end_obstacle_avoidance">
          <property name="text">
-          <string>PushButton</string>
+          <string>End</string>
          </property>
         </widget>
        </item>

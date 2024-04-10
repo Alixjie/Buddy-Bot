@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    AStar.cpp \
     arch/linux/net_serial.cpp \
     arch/linux/net_socket.cpp \
     arch/linux/timer.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
     sl_udp_channel.cpp
 
 HEADERS += \
+    AStar.h \
     arch/linux/arch_linux.h \
     arch/linux/net_serial.h \
     arch/linux/thread.hpp \
