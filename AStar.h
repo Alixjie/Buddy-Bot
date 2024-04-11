@@ -165,10 +165,11 @@ public:
 
 public:
     AStar(int mX, int mY);  //AStar带参构造函数
+    AStar();
 
     ~AStar();  //析构函数
 
-    bool changeBlockState(int mX, int mY);  //改变地图上的障碍物信息
+    bool changeBlockState(const int& mX, const int& mY);  //改变地图上的障碍物信息
 
 };
 

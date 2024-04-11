@@ -146,14 +146,27 @@ AStar::AStar(int mX, int mY) {
             map[x][y] = 0;
 }
 
-bool AStar::changeBlockState(int mX, int mY) {
+AStar::AStar()
+{
+    mapX = 128;
+    mapY = 76;
+    map = new int *[128];
+    for (int i = 0; i < 128; ++i)
+        map[i] = new int[76];
+
+    for (int x = 0; x < 128; ++x)
+        for (int y = 0; y < 76; ++y)
+            map[x][y] = 0;
+}
+
+bool AStar::changeBlockState(const int& mX, const int& mY) {
     if (mX < 0 || mX >= mapX || mY < 0 || mY >= mapY)
         return false;
     else {
         if (map[mX][mY] == 0)
             map[mX][mY] = 1;
-        else
-            map[mX][mY] = 0;
+//        else
+//            map[mX][mY] = 0;
         return true;
     }
 }
