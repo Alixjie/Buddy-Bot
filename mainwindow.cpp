@@ -180,10 +180,15 @@ void MainWindow::timerEvent(QTimerEvent *event) {
         get_lidar_point_info();
         get_uwb_point_info();
 
+<<<<<<< HEAD
         star = AStar(test_x, test_y);
         star.setStartPoint(Point(50, 70));
         origin_point = QPoint(500, 700);
         star.setEndPoint(Point(int(uwb_label_position.x() / 10), int(uwb_label_position.y() / 10)));
+=======
+        star.setStartPoint(Point(70, 50));
+        star.setEndPoint(Point(int(uwb_label_position.y / 10), int(uwb_label_position.x / 10)));
+>>>>>>> f1d5036a7dc526a81d1047c10750b1b51b75e43a
 
         for (int num = 0; num < (int)count; ++num) {
             if (((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) &&
@@ -195,6 +200,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
                 double y = origin_point.y() -
                            (nodes[num].dist_mm_q2 / 4.0f) *
                            cos((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
+<<<<<<< HEAD
 
 //                star.changeBlockState(int(x / 10), int(y / 10));
 //                std::cout << "x, y: " << x << ", " << y << " ";
@@ -209,6 +215,9 @@ void MainWindow::timerEvent(QTimerEvent *event) {
 //                        std::cout << "x, y: " << x << ", " << y << " ";
 //                        std::cout << "i, j: " << i << ", " << j << " ";
                     }
+=======
+                star.changeBlockState(int(y / 10), int(x / 10));
+>>>>>>> f1d5036a7dc526a81d1047c10750b1b51b75e43a
             }
         }
         if (star.totalLogic())
