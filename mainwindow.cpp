@@ -144,7 +144,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
             }
 
             std::list <Point> &returnList = star.getReturnList();
-            std::cout << "The way is" << " (" << returnList.size() << "): ";
+//            std::cout << "The way is" << " (" << returnList.size() << "): ";
 //            int **map = star.getMap();
 
 //            for (int i = 0; i < test_x; ++i) {
@@ -152,6 +152,8 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 //                    std::cout << map[i][j] << " ";
 //                std::cout << std::endl;
 //            }
+            QPen pen3(Qt::green, 6, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
+            painter.setPen(pen3);
 
             for (std::list<Point>::iterator it = returnList.begin(); it != returnList.end(); ++it) {
                 painter.drawPoint(QPoint(int(it->x) * 10, int(it->y) * 10));
@@ -180,17 +182,12 @@ void MainWindow::timerEvent(QTimerEvent *event) {
         get_lidar_point_info();
         get_uwb_point_info();
 
-<<<<<<< HEAD
         star = AStar(test_x, test_y);
         star.setStartPoint(Point(50, 70));
         origin_point = QPoint(500, 700);
         star.setEndPoint(Point(int(uwb_label_position.x() / 10), int(uwb_label_position.y() / 10)));
-=======
-        star.setStartPoint(Point(70, 50));
-        star.setEndPoint(Point(int(uwb_label_position.y / 10), int(uwb_label_position.x / 10)));
->>>>>>> f1d5036a7dc526a81d1047c10750b1b51b75e43a
 
-        for (int num = 0; num < (int)count; ++num) {
+        for (int num = 0; num < (int) count; ++num) {
             if (((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) &&
                 (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 90.f) ||
                  ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 270.f))) {
@@ -200,24 +197,21 @@ void MainWindow::timerEvent(QTimerEvent *event) {
                 double y = origin_point.y() -
                            (nodes[num].dist_mm_q2 / 4.0f) *
                            cos((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
-<<<<<<< HEAD
 
 //                star.changeBlockState(int(x / 10), int(y / 10));
 //                std::cout << "x, y: " << x << ", " << y << " ";
 //                std::cout << "int (x, y): " << int(x / 10) << " " << int(y / 10) << " ";
                 int x_start_loc = int(x / 10) - 1;
-                int x_end_loc = int(x /10 ) + 1;
+                int x_end_loc = int(x / 10) + 1;
                 int y_start_loc = int(y / 10) - 1;
-                int y_end_loc = int(y / 10 ) + 1;
+                int y_end_loc = int(y / 10) + 1;
+
                 for (int i = x_start_loc; i <= x_end_loc; ++i)
                     for (int j = y_start_loc; j <= y_end_loc; ++j) {
                         star.changeBlockState(i, j);
 //                        std::cout << "x, y: " << x << ", " << y << " ";
 //                        std::cout << "i, j: " << i << ", " << j << " ";
                     }
-=======
-                star.changeBlockState(int(y / 10), int(x / 10));
->>>>>>> f1d5036a7dc526a81d1047c10750b1b51b75e43a
             }
         }
         if (star.totalLogic())
