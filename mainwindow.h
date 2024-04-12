@@ -59,7 +59,7 @@ private:
 
     AStar star;
 
-    ULM3Samples ulm3_samples;
+    ULM3Samples* ulm3_samples;
     output_data uwb_loc;
 
     sl_lidar_response_measurement_node_hq_t nodes[8192];

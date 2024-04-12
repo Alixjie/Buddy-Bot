@@ -1,7 +1,7 @@
 #ifndef __ULM3_SAMPLES_H__
 #define __ULM3_SAMPLES_H__
 
-#include "kalman_filter.h"
+//#include "kalman_filter.h"
 #include "sync_queue.h"
 #include "ulm3_acquisition_callback.h"
 #include "ulm3_pdoa_comm.h"
@@ -13,14 +13,14 @@ typedef struct output_data {
 
 class ULM3Samples {
 public:
-    ULM3Samples(char* pname);
-    ULM3Samples();
+    ULM3Samples(const char* pname);
+    //ULM3Samples();
     void start();
     output_data getData();
 
 private:
     bool isFirst_;
-    KalmanFilter filter_;
+    //KalmanFilter filter_;
     static constexpr char default_name[] = "/dev/ttyUSB1";
     SyncQueue<control_param> sync_queue_;
     ULM3PDOAComm ulm3_pdoa_comm_;

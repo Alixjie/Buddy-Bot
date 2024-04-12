@@ -26,7 +26,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->quit_program, &QPushButton::clicked, this, &QApplication::quit);
 
-    uwb_initialise();
+    char pname[]="/dev/ttyUSB1";
+    ulm3_samples = new ULM3Samples(pname);
+    ulm3_samples->start();
     lidar = *sl::createLidarDriver();
     if (!lidar) {
         std::cerr << "Insufficent memory, exit" << std::endl;
@@ -168,17 +170,21 @@ void MainWindow::paintEvent(QPaintEvent *event) {
     ++num_paint;
 }
 
+
 int MainWindow::get_uwb_point_info() {
-    uwb_loc = ulm3_samples.getData();
-    uwb_label_position = QPoint(uwb_loc.y * 0.9f, uwb_loc.x * 0.9f);
+    uwb_loc = ulm3_samples->getData();
+    uwb_label_position = QPoint(500 + uwb_loc.x * 6, 700 - uwb_loc.y * 6);
+    std::cout << uwb_label_position.x() <<',' << uwb_label_position.y()<<std::endl;
+
+//    uwb_label_position = QPoint(500, 100);
     return 0;
 }
 
 int MainWindow::uwb_initialise()
 {
-    char pname[] = "/dev/ttyUSB1";
-    ulm3_samples = ULM3Samples(pname);
-    ulm3_samples.start();
+//    char pname[] = "/dev/ttyUSB1";
+//    ulm3_samples = ULM3Samples(pname);
+    //ulm3_samples.start();
 }
 
 
@@ -210,13 +216,11 @@ void MainWindow::timerEvent(QTimerEvent *event) {
 //                star.changeBlockState(int(x / 10), int(y / 10));
 //                std::cout << "x, y: " << x << ", " << y << " ";
 //                std::cout << "int (x, y): " << int(x / 10) << " " << int(y / 10) << " ";
-                int x_start_loc = int(x / 10) - 1;
-                int x_end_loc = int(x / 10) + 1;
-                int y_start_loc = int(y / 10) - 1;
-                int y_end_loc = int(y / 10) + 1;
+                int x_start = int(x / 10) - 2;
+                int y_start = int(y / 10) - 2;
 
-                for (int i = x_start_loc; i <= x_end_loc; ++i)
-                    for (int j = y_start_loc; j <= y_end_loc; ++j) {
+                for (int i = x_start; i <= x_start + 2; ++i)
+                    for (int j = y_start; j <= y_start + 2; ++j) {
                         star.changeBlockState(i, j);
 //                        std::cout << "x, y: " << x << ", " << y << " ";
 //                        std::cout << "i, j: " << i << ", " << j << " ";
@@ -265,7 +269,7 @@ void MainWindow::end_lidar() {
 
 void MainWindow::start_obstacle_avoidance() {
     system_status = obstacle_avoidance;
-    timer_id_obstacle_avoidance = startTimer(300);
+    timer_id_obstacle_avoidance = startTimer(500);
 }
 
 void MainWindow::end_obstacle_avoidance() {
@@ -276,6 +280,11 @@ MainWindow::~MainWindow() {
     lidar->stop();
     delay(20);
     lidar->setMotorSpeed(0);
+
+    if(ulm3_samples){
+        delete ulm3_samples;
+        ulm3_samples = nullptr;
+    }
 
     if (lidar) {
         delete lidar;

@@ -3,14 +3,12 @@
 #include <cmath>
 #include <thread>
 
-#include "kalman_filter.h"
+//#include "kalman_filter.h"
 #include "sync_queue.h"
 #include "ulm3_acquisition_callback.h"
 #include "ulm3_pdoa_comm.h"
 
-char[] default_name="/dev/ttyUSB1";
-
-KalmanFilter initialize_filter()
+/*KalmanFilter initialize_filter()
 {
     double sigma_ax = 4;
     double sigma_ay = 4;
@@ -36,10 +34,10 @@ KalmanFilter initialize_filter()
     KalmanFilter filter(x, P, A, H, R, Q);
 
     return filter;
-}
+}*/
 
-ULM3Samples::ULM3Samples(char* pname)
-    : filter_(initialize_filter()),
+ULM3Samples::ULM3Samples(const char* pname)
+    : /*filter_(initialize_filter()),*/
       sync_queue_(5),
       ulm3_pdoa_comm_(pname),
       ulm3_acquisition_callback_(&sync_queue_)
@@ -47,21 +45,21 @@ ULM3Samples::ULM3Samples(char* pname)
     isFirst_ = true;
 }
 
-ULM3Samples::ULM3Samples()
-    : filter_(initialize_filter()),
-      sync_queue_(5),
-      ulm3_pdoa_comm_(default_name),
-      ulm3_acquisition_callback_(&sync_queue_)
-{
-    isFirst_ = true;
-}
+//ULM3Samples::ULM3Samples()
+//    : /*filter_(initialize_filter()),*/
+//      sync_queue_(5),
+//      ulm3_pdoa_comm_(default_name),
+//      ulm3_acquisition_callback_(&sync_queue_)
+//{
+//    isFirst_ = true;
+//}
 
 void ULM3Samples::start()
 {
     ulm3_pdoa_comm_.registerCallback(&ulm3_acquisition_callback_);
     ulm3_pdoa_comm_.start();
 
-    if (isFirst_) {
+    /*if (isFirst_) {
         control_param first_data[2];
         sync_queue_.waitAndPop(2, first_data);
 
@@ -86,34 +84,24 @@ void ULM3Samples::start()
         filter_.setX(first_x);
 
         isFirst_ = false;
-    }
+    }*/
 }
 
 output_data ULM3Samples::getData()
 {
     control_param input = sync_queue_.waitAndPop();
     output_data result;
-    Eigen::VectorXd z(2);
+    /*Eigen::VectorXd z(2);
     z << input.distance * std::cos(input.degree * M_PI / 180),
         input.distance * std::sin(input.degree * M_PI / 180);
     filter_.predict();
-    filter_.corrective(z);
+    filter_.corrective(z);*/
 
-    Eigen::VectorXd current_x = filter_.getX();
-    result.x = current_x[0];
-    result.y = current_x[1];
+    //Eigen::VectorXd current_x = filter_.getX();
+    /*result.x = current_x[0];
+    result.y = current_x[1];*/
+    result.y = input.distance*cos(input.degree*M_PI/180);
+    result.x = input.distance*sin(input.degree*M_PI/180);
     return result;
 }
 
-int main(int argc, char* argv[])
-{
-    char pname[] = "/dev/ttyUSB1";
-    ULM3Samples ulm3_samples(pname);
-    output_data temp;
-    ulm3_samples.start();
-    for (int i = 0; i < 400; ++i) {
-        temp = ulm3_samples.getData();
-        std::cout << temp.x << ' ' << temp.y << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    }
-}
