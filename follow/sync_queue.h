@@ -3,9 +3,12 @@
 
 #include <condition_variable>
 #include <cstddef>
+#include <iostream>
 #include <mutex>
 #include <utility>
 #include <vector>
+
+#include "semaphore.h"
 
 template <typename T>
 class SyncQueue {
@@ -56,6 +59,21 @@ public:
         notEmpty_.notify_one();
     }
 
+    void push(const value_type &item, uint delay)
+    {
+        std::unique_lock<std::mutex> lock_write(mutex_write_);
+        // Wait for queue not full.
+        notFull_.wait_for(lock_write, std::chrono::milliseconds(delay),
+                          [this] { return readSize() < capacity_; });
+
+        // Start writing, so prevent others read and write.
+        std::unique_lock<std::mutex> lock_read(mutex_read_);
+        queue_[back_] = std::move(item);
+        back_ = (back_ + 1) % (capacity_ + 1);
+
+        notEmpty_.notify_one();
+    }
+
     /**
      * Wait for queue not empty and pop an item.
      * \return the item popped.
@@ -73,6 +91,23 @@ public:
 
         notFull_.notify_one();
         return item;
+    }
+
+    void *waitAndPop(uint l, value_type *items)
+    {
+        std::unique_lock<std::mutex> lock_write(mutex_write_);
+
+        // Ensure not empty.
+        notEmpty_.wait(lock_write, [&] { return readSize() >= l; });
+
+        std::unique_lock<std::mutex> lock_read(mutex_read_);
+        for (int i = 0; i < l; ++i) {
+            items[i] = std::move(queue_[front_]);
+            front_ = (front_ + 1) % (capacity_ + 1);
+        }
+
+        notFull_.notify_one();
+        return items;
     }
 
     /**
