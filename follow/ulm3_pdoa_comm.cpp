@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void ULM3PDOAComm::openDev(char* dev_name)
+void ULM3PDOAComm::openDev(const char* dev_name)
 {
     fd_ = open(dev_name, O_RDONLY | O_NOCTTY | O_RSYNC);
     if (-1 == fd_) {
@@ -11,7 +11,7 @@ void ULM3PDOAComm::openDev(char* dev_name)
     }
 }
 
-ULM3PDOAComm::ULM3PDOAComm(char* port_name)
+ULM3PDOAComm::ULM3PDOAComm(const char* port_name)
 {
     buffer.str = new char[1024];
     buffer.length = 0;

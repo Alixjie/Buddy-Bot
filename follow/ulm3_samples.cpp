@@ -47,6 +47,15 @@ ULM3Samples::ULM3Samples(char* pname)
     isFirst_ = true;
 }
 
+ULM3Samples::ULM3Samples()
+    : filter_(initialize_filter()),
+      sync_queue_(5),
+      ulm3_pdoa_comm_(default_name),
+      ulm3_acquisition_callback_(&sync_queue_)
+{
+    isFirst_ = true;
+}
+
 void ULM3Samples::start()
 {
     ulm3_pdoa_comm_.registerCallback(&ulm3_acquisition_callback_);
