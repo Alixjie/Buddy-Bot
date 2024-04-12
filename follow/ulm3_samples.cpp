@@ -8,6 +8,8 @@
 #include "ulm3_acquisition_callback.h"
 #include "ulm3_pdoa_comm.h"
 
+char[] default_name="/dev/ttyUSB1";
+
 KalmanFilter initialize_filter()
 {
     double sigma_ax = 4;
@@ -96,7 +98,7 @@ output_data ULM3Samples::getData()
 
 int main(int argc, char* argv[])
 {
-    char pname[] = "/dev/ttyUSB0";
+    char pname[] = "/dev/ttyUSB1";
     ULM3Samples ulm3_samples(pname);
     output_data temp;
     ulm3_samples.start();

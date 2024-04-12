@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->quit_program, &QPushButton::clicked, this, &QApplication::quit);
 
+    uwb_initialise();
     lidar = *sl::createLidarDriver();
     if (!lidar) {
         std::cerr << "Insufficent memory, exit" << std::endl;
@@ -129,8 +130,8 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 //        std::cout << "  Quality: " << (nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) << std::endl;
 
                 if (((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) &&
-                    (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 90.f) ||
-                     ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 270.f))) {
+                    (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 110.f) ||
+                     ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 250.f))) {
                     double x = origin_point.x() +
                                (nodes[num].dist_mm_q2 / 4.0f) *
                                sin((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
@@ -147,7 +148,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 //            std::cout << "The way is" << " (" << returnList.size() << "): ";
 //            int **map = star.getMap();
 
-//            for (int i = 0; i < test_x; ++i) {
+//            for (int i = 0; i < test_x;uwb_initialise() ++i) {
 //                for (int j = 0; j < test_y; ++j)
 //                    std::cout << map[i][j] << " ";
 //                std::cout << std::endl;
@@ -168,8 +169,16 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 }
 
 int MainWindow::get_uwb_point_info() {
-    uwb_label_position = QPoint(500, 100);
+    uwb_loc = ulm3_samples.getData();
+    uwb_label_position = QPoint(uwb_loc.y * 0.9f, uwb_loc.x * 0.9f);
     return 0;
+}
+
+int MainWindow::uwb_initialise()
+{
+    char pname[] = "/dev/ttyUSB1";
+    ulm3_samples = ULM3Samples(pname);
+    ulm3_samples.start();
 }
 
 
@@ -189,8 +198,8 @@ void MainWindow::timerEvent(QTimerEvent *event) {
 
         for (int num = 0; num < (int) count; ++num) {
             if (((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) &&
-                (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 90.f) ||
-                 ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 270.f))) {
+                (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 110.f) ||
+                 ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 250.f))) {
                 double x = origin_point.x() +
                            (nodes[num].dist_mm_q2 / 4.0f) *
                            sin((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
@@ -256,7 +265,7 @@ void MainWindow::end_lidar() {
 
 void MainWindow::start_obstacle_avoidance() {
     system_status = obstacle_avoidance;
-    timer_id_obstacle_avoidance = startTimer(200);
+    timer_id_obstacle_avoidance = startTimer(300);
 }
 
 void MainWindow::end_obstacle_avoidance() {

@@ -17,6 +17,10 @@ SOURCES += \
     dataunpacker/unpacker/handler_capsules.cpp \
     dataunpacker/unpacker/handler_hqnode.cpp \
     dataunpacker/unpacker/handler_normalnode.cpp \
+    follow/kalman_filter.cpp \
+    follow/ulm3_acquisition_callback.cpp \
+    follow/ulm3_pdoa_comm.cpp \
+    follow/ulm3_samples.cpp \
     hal/thread.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -42,6 +46,11 @@ HEADERS += \
     dataunpacker/unpacker/handler_capsules.h \
     dataunpacker/unpacker/handler_hqnode.h \
     dataunpacker/unpacker/handler_normalnode.h \
+    follow/kalman_filter.h \
+    follow/sync_queue.h \
+    follow/ulm3_acquisition_callback.h \
+    follow/ulm3_pdoa_comm.h \
+    follow/ulm3_samples.h \
     hal/abs_rxtx.h \
     hal/assert.h \
     hal/byteops.h \
