@@ -40,7 +40,7 @@ public:
      * the acquisition.
      * \param port_name the path to device.
      **/
-    ULM3PDOAComm(char *port_name);
+    ULM3PDOAComm(const char *port_name);
 
     /**
      * Destructor which makes sure the data acquisition.
@@ -78,7 +78,7 @@ private:
 
     struct termios serial_port_setting_;
     uwb_sample pretreatment(char *sample_string);
-    void openDev(char *dev_name);
+    void openDev(const char *dev_name);
     void run();
 };
 
