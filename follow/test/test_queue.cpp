@@ -2,7 +2,7 @@
 #include <iostream>
 #include <thread>
 
-#include "sync_queue.h"
+#include "../sync_queue.h"
 void producter(SyncQueue<int>& q)
 {
     for (int i = 1; i < 11; ++i) {

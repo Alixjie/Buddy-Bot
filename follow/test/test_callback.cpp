@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "sync_queue.h"
-#include "ulm3_acquisition_callback.h"
-#include "ulm3_pdoa_comm.h"
+#include "../sync_queue.h"
+#include "../ulm3_acquisition_callback.h"
+#include "../ulm3_pdoa_comm.h"
 
 int main(int argc, char* argv[])
 {
