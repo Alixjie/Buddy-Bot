@@ -6,7 +6,8 @@
 
 class Semaphore {
 public:
-    explicit Semaphore(const int count = 0);
+    Semaphore(const int count = 0);
+    Semaphore();
     void signal();
     void wait();
 

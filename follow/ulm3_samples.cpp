@@ -3,7 +3,7 @@
 #include <cmath>
 #include <thread>
 
-//#include "kalman_filter.h"
+// #include "kalman_filter.h"
 #include "sync_queue.h"
 #include "ulm3_acquisition_callback.h"
 #include "ulm3_pdoa_comm.h"
@@ -43,16 +43,17 @@ ULM3Samples::ULM3Samples(const char* pname)
       ulm3_acquisition_callback_(&sync_queue_)
 {
     isFirst_ = true;
+    following_ = 0;
 }
 
-//ULM3Samples::ULM3Samples()
-//    : /*filter_(initialize_filter()),*/
-//      sync_queue_(5),
-//      ulm3_pdoa_comm_(default_name),
-//      ulm3_acquisition_callback_(&sync_queue_)
+// ULM3Samples::ULM3Samples()
+//     : /*filter_(initialize_filter()),*/
+//       sync_queue_(5),
+//       ulm3_pdoa_comm_(default_name),
+//       ulm3_acquisition_callback_(&sync_queue_)
 //{
-//    isFirst_ = true;
-//}
+//     isFirst_ = true;
+// }
 
 void ULM3Samples::start()
 {
@@ -97,11 +98,62 @@ output_data ULM3Samples::getData()
     filter_.predict();
     filter_.corrective(z);*/
 
-    //Eigen::VectorXd current_x = filter_.getX();
+    // Eigen::VectorXd current_x = filter_.getX();
     /*result.x = current_x[0];
     result.y = current_x[1];*/
-    result.y = input.distance*cos(input.degree*M_PI/180);
-    result.x = input.distance*sin(input.degree*M_PI/180);
+    result.y = input.distance * cos(input.degree * M_PI / 180);
+    result.x = input.distance * sin(input.degree * M_PI / 180);
     return result;
 }
 
+void ULM3Samples::run_follow()
+{
+    double weights[] = {0.05, 0.05, 0.1, 0.1, 0.3, 0.4};
+    while (following_) {
+        control_param temp_sample[5];
+        sync_queue_.waitAndPop(5, temp_sample);
+        control_param result;
+
+        result.degree = 0;
+        result.distance = 0;
+
+        for (int i = 0; i < 5; ++i) {
+            result.degree += weights[i] * temp_sample[i].degree;
+            result.distance += weights[i] * temp_sample[i].distance;
+        }
+
+        degreeControl_(std::round(result.degree / 45) * 45);
+        distanceControl_(std::round(result.distance / 30) * 30);
+    }
+}
+
+void ULM3Samples::registerControl(void (*distanceControl)(int),
+                                  void (*degreeControl)(int))
+{
+    distanceControl_ = distanceControl;
+    degreeControl_ = degreeControl;
+}
+
+void ULM3Samples::startFollow()
+{
+    if (following_) return;
+
+    following_ = 1;
+
+    followThread = std::thread(&ULM3Samples::run_follow, this);
+}
+
+void ULM3Samples::stopFollow()
+{
+    if (!following_) return;
+
+    following_ = 0;
+    followThread.join();
+}
+
+ULM3Samples::~ULM3Samples()
+{
+    stopFollow();
+    distanceControl_ = nullptr;
+    degreeControl_ = nullptr;
+}
