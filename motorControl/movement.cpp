@@ -1,11 +1,8 @@
-#include <stdio.h>
-#include <iostream>
 #include <pigpio.h>
 #include "encoder.hpp"
 #include "pwm.hpp"
-#include <unistd.h>
-#include <math.h>
 #include "motorDriver.hpp"
+#include "movement.hpp"
 /*
 
 TO BUILD
@@ -26,12 +23,10 @@ static int b = 0;
 void callbackL(int wayL)
 {
    countL += wayL;
-//   std::cout <<"COUNTL= "<< countL<< std::endl;
 }
 void callbackR(int wayR)
 {
    countR += wayR;
-  // std::cout <<"COUNTR= "<< countR<< std::endl;
 }
 
 
@@ -68,8 +63,6 @@ static void timercallback(void){
       if(abs(target_count)>b)   {gpioPWM(27, 0);  gpioPWM(22, 0);target_count = 0;;a = 0;} //90°  b = angle*10/3 + 0.004 angle*angle
    }
 
-   printf("vL_current=%d vR_current=%d\n", vL_current, vR_current);
-
    countL = countR = 0;
 
 
@@ -83,19 +76,9 @@ int main(int argc, char *argv[])
    re_decoder decL(20, 21, callbackL);
 
    //Periodically calling timercallback to change the motion status and keep speed-loop.
-   gpioSetTimerFunc(0, 54, timercallback); 
-   
-   //Control instruction
-    a=2; b=-90;
-   getchar();
-    a=2;b=-45;
-   getchar();
-    a=2;b=-30;
-   getchar();
-    a=2;b=-15;    
+   gpioSetTimerFunc(0, 54, timercallback);    
 
    //clear all
-   getchar();
    gpioSetTimerFunc(0, 0, nullptr);
    clearALL();
    decL.re_cancel();
@@ -103,4 +86,3 @@ int main(int argc, char *argv[])
    gpioTerminate();
 
 }
-

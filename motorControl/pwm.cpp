@@ -16,7 +16,15 @@ sudo ./pwm
 //左轮方向
 void AIN(int mode)
 {
+
 	int gpioPin1=6,gpioPin2=5;
+    if(mode==2)   
+	{
+	gpioSetMode(gpioPin1, PI_OUTPUT);
+    gpioWrite(gpioPin1, 0);
+	gpioSetMode(gpioPin2, PI_OUTPUT);
+    gpioWrite(gpioPin2, 0);
+	 }
 //正转
 	if(mode==1)
 	{
@@ -40,6 +48,14 @@ void AIN(int mode)
 void BIN(int mode)
 {
 	int gpioPin1=13,gpioPin2=26;
+    if(mode==2)   
+	{
+	gpioSetMode(gpioPin1, PI_OUTPUT);
+    gpioWrite(gpioPin1, 0);
+	gpioSetMode(gpioPin2, PI_OUTPUT);
+    gpioWrite(gpioPin2, 0);
+	 }
+
 //正转
 	if(mode==1)
 	{
