@@ -71,9 +71,9 @@ void ULM3PDOAComm::run()
     while (running_) {
         bytesRead = read(fd_, buffer.str, buffer.capacity);
         buffer.length = bytesRead;
-        /* for (int i = 0; i < bytesRead; i++) {
+        /*for (int i = 0; i < bytesRead; i++) {
             std::cout << buffer.str[i];
-        } */
+        }*/
         ulm3_pdoa_callback_->hasSample(buffer);
     }
     close(fd_);
