@@ -12,7 +12,9 @@
 int VelocityR(int Target_RV, int Current_RV);
 int VelocityL(int Target_LV, int Current_LV);
 void Speed(int current_vL,int current_vR);
-void spin(int angle);
+void spinSpeed(float b, int current_vL,int current_vR);
+//void spin(int angle, int current_vL, int current_vR);
+//void straight(int x, int current_vL, int current_vR);
 void direction(int mode);
 void clearALL();
 #endif
