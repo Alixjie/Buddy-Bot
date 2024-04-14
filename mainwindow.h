@@ -14,6 +14,7 @@
 #include "sl_lidar.h"
 #include "AStar.h"
 #include "follow/ulm3_samples.h"
+#include "VoiceControl/stt.h"
 
 #define lidar_scan 1
 #define obstacle_avoidance 2
@@ -53,6 +54,8 @@ public slots:
     void start_obstacle_avoidance();
 
     void end_obstacle_avoidance();
+
+    void voice_control_main();
 
 private:
     Ui::MainWindow *ui;

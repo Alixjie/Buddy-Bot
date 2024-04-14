@@ -20,7 +20,7 @@
       <x>910</x>
       <y>0</y>
       <width>369</width>
-      <height>221</height>
+      <height>231</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -52,6 +52,13 @@
       <widget class="QPushButton" name="quit_program">
        <property name="text">
         <string>Quit</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="voice_control">
+       <property name="text">
+        <string>Voice Control</string>
        </property>
       </widget>
      </item>

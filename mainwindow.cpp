@@ -26,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->quit_program, &QPushButton::clicked, this, &QApplication::quit);
 
+    connect(ui->voice_control, &QPushButton::clicked, this, &MainWindow::voice_control_main);
+
     char pname[]="/dev/ttyUSB1";
     ulm3_samples = new ULM3Samples(pname);
     ulm3_samples->start();
@@ -276,15 +278,20 @@ void MainWindow::end_obstacle_avoidance() {
     killTimer(timer_id_obstacle_avoidance);
 }
 
+void MainWindow::voice_control_main()
+{
+    voice_control();
+}
+
 MainWindow::~MainWindow() {
     lidar->stop();
     delay(20);
     lidar->setMotorSpeed(0);
 
-    if(ulm3_samples){
-        delete ulm3_samples;
-        ulm3_samples = nullptr;
-    }
+//    if(ulm3_samples){
+//        delete ulm3_samples;
+//        ulm3_samples = nullptr;cc
+//    }
 
     if (lidar) {
         delete lidar;

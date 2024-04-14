@@ -30,13 +30,13 @@
 #include "coqui-stt.h"
 
 extern "C" {
-#include "audio_buffer.h"
-#include "wav_io.h"
+#include "VoiceControl/audio/audio_buffer.h"
+#include "VoiceControl/audio/wav_io.h"
 }
 
 
 /*
-std::vector<short> loadAudioFile(const std::string& filename) {
+std:c:vector<short> loadAudioFile(const std::string& filename) {
     SF_INFO sfinfo;
     SNDFILE* file = sf_open(filename.c_str(), SFM_READ, &sfinfo);
     if (file == NULL) {
@@ -45,7 +45,7 @@ std::vector<short> loadAudioFile(const std::string& filename) {
     }
 
     std::vector<short> buffer(sfinfo.frames);
-    sf_read_short(file, buffer.data(), sfinfo.frames);
+    sf_reaccd_short(file, buffer.data(), sfinfo.frames);
     sf_close(file);
 
     return buffer;
@@ -415,6 +415,3 @@ int voice_control() {
     return 0;
 }
 
-int main() {
-    return voice_control();
-}
