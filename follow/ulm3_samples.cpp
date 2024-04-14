@@ -1,8 +1,5 @@
 #include "ulm3_samples.h"
 
-#include <cmath>
-#include <thread>
-
 // #include "kalman_filter.h"
 #include "sync_queue.h"
 #include "ulm3_acquisition_callback.h"
@@ -43,7 +40,7 @@ ULM3Samples::ULM3Samples(const char* pname)
       ulm3_acquisition_callback_(&sync_queue_)
 {
     isFirst_ = true;
-    following_ = 0;
+    // following_ = 0;
 }
 
 // ULM3Samples::ULM3Samples()
@@ -106,7 +103,36 @@ output_data ULM3Samples::getData()
     return result;
 }
 
-void ULM3Samples::run_follow()
+control_param ULM3Samples::getControl()
+{
+    control_param input[5];
+    control_param result;
+
+    result.degree = result.distance = result.speed = 0;
+    double weights[] = {0.1, 0.1, 0.15, 0.15, 0.25, 0.25};
+
+    sync_queue_.waitAndPop(5, input);
+
+    for (int i = 0; i < 5; ++i) {
+        result.degree += weights[i] * input[i].degree;
+        result.distance += weights[i] * input[i].distance;
+    }
+    result.distance = (int)result.distance;
+    result.degree = (int)result.degree;
+
+    if (result.distance < 30) {
+        result.distance = 10;
+    }
+    if (result.degree < 45 && result.degree > 0) {
+        result.degree = 45;
+    } else if (result.degree > -45 && result.degree < 0) {
+        result.degree = -45;
+    }
+
+    return result;
+}
+
+/*void ULM3Samples::run_follow()
 {
     double weights[] = {0.05, 0.05, 0.1, 0.1, 0.3, 0.4};
     while (following_) {
@@ -125,9 +151,9 @@ void ULM3Samples::run_follow()
         degreeControl_(std::round(result.degree / 45) * 45);
         distanceControl_(std::round(result.distance / 30) * 30);
     }
-}
+}*/
 
-void ULM3Samples::registerControl(void (*distanceControl)(int),
+/*void ULM3Samples::registerControl(void (*distanceControl)(int),
                                   void (*degreeControl)(int))
 {
     distanceControl_ = distanceControl;
@@ -149,11 +175,11 @@ void ULM3Samples::stopFollow()
 
     following_ = 0;
     followThread.join();
-}
+}*/
 
-ULM3Samples::~ULM3Samples()
+/*ULM3Samples::~ULM3Samples()
 {
     stopFollow();
     distanceControl_ = nullptr;
     degreeControl_ = nullptr;
-}
+}*/
