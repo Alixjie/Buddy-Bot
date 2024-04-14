@@ -29,7 +29,6 @@ private:
     SyncQueue<control_param> *sync_queue_;
 
     void getSample(const simple_string &sip_str);
-    void monitorQueue();
 };
 
 #endif

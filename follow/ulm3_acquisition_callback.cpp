@@ -1,8 +1,5 @@
 #include "ulm3_acquisition_callback.h"
 
-#include "sync_queue.h"
-#include "ulm3_pdoa_comm.h"
-
 ULM3AcquisitionCallback::ULM3AcquisitionCallback(
     SyncQueue<control_param> *sync_queue)
 {

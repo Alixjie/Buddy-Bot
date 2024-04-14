@@ -19,7 +19,7 @@ class ULM3Samples {
 public:
     ULM3Samples(const char* pname);
     // ULM3Samples();
-    ~ULM3Samples();
+    //~ULM3Samples();
     void start();
     output_data getData();
     control_param getControl();
