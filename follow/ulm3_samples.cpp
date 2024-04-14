@@ -1,10 +1,6 @@
 #include "ulm3_samples.h"
 
 // #include "kalman_filter.h"
-#include "sync_queue.h"
-#include "ulm3_acquisition_callback.h"
-#include "ulm3_pdoa_comm.h"
-
 /*KalmanFilter initialize_filter()
 {
     double sigma_ax = 4;

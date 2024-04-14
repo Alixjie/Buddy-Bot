@@ -77,7 +77,6 @@ private:
     ULM3PDOACallback *ulm3_pdoa_callback_ = nullptr;
 
     struct termios serial_port_setting_;
-    uwb_sample pretreatment(char *sample_string);
     void openDev(const char *dev_name);
     void run();
 };
