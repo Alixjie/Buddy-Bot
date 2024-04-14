@@ -2,6 +2,7 @@
 #define __ULM3_SAMPLES_H__
 
 // #include "kalman_filter.h"
+#include <cmath>
 #include <mutex>
 #include <thread>
 
@@ -21,27 +22,28 @@ public:
     ~ULM3Samples();
     void start();
     output_data getData();
+    control_param getControl();
 
-    void registerControl(void (*distanceControl)(int),
-                         void (*degreeControl)(int));
-    void startFollow();
-    void stopFollow();
+    /*void registerControl(void (*distanceControl)(int),
+                         void (*degreeControl)(int));*/
+    // void startFollow();
+    // void stopFollow();
 
 private:
     bool isFirst_;
-    std::mutex mutex_;
-    int following_;
-    std::thread followThread;
-    // KalmanFilter filter_;
+    // std::mutex mutex_;
+    // int following_;
+    // std::thread followThread;
+    //  KalmanFilter filter_;
     static constexpr char default_name[] = "/dev/ttyUSB1";
     SyncQueue<control_param> sync_queue_;
     ULM3PDOAComm ulm3_pdoa_comm_;
     ULM3AcquisitionCallback ulm3_acquisition_callback_;
 
-    void (*distanceControl_)(int);
-    void (*degreeControl_)(int);
+    // void (*distanceControl_)(int);
+    // void (*degreeControl_)(int);
 
-    void run_follow();
+    // void run_follow();
 };
 
 #endif
