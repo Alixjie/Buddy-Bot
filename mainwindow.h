@@ -13,6 +13,7 @@
 
 #include "sl_lidar.h"
 #include "AStar.h"
+#include "follow/ulm3_samples.h"
 
 #define lidar_scan 1
 #define obstacle_avoidance 2
@@ -42,6 +43,8 @@ public:
 
     int get_uwb_point_info();
 
+    int uwb_initialise();
+
 public slots:
     void start_lidar();
 
@@ -55,6 +58,9 @@ private:
     Ui::MainWindow *ui;
 
     AStar star;
+
+    ULM3Samples* ulm3_samples;
+    output_data uwb_loc;
 
     sl_lidar_response_measurement_node_hq_t nodes[8192];
     size_t count;

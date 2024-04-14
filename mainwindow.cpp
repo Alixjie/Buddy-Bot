@@ -26,6 +26,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->quit_program, &QPushButton::clicked, this, &QApplication::quit);
 
+    char pname[]="/dev/ttyUSB1";
+    ulm3_samples = new ULM3Samples(pname);
+    ulm3_samples->start();
     lidar = *sl::createLidarDriver();
     if (!lidar) {
         std::cerr << "Insufficent memory, exit" << std::endl;
@@ -129,8 +132,8 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 //        std::cout << "  Quality: " << (nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) << std::endl;
 
                 if (((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) &&
-                    (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 90.f) ||
-                     ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 270.f))) {
+                    (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 110.f) ||
+                     ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 250.f))) {
                     double x = origin_point.x() +
                                (nodes[num].dist_mm_q2 / 4.0f) *
                                sin((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
@@ -147,7 +150,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 //            std::cout << "The way is" << " (" << returnList.size() << "): ";
 //            int **map = star.getMap();
 
-//            for (int i = 0; i < test_x; ++i) {
+//            for (int i = 0; i < test_x;uwb_initialise() ++i) {
 //                for (int j = 0; j < test_y; ++j)
 //                    std::cout << map[i][j] << " ";
 //                std::cout << std::endl;
@@ -167,9 +170,21 @@ void MainWindow::paintEvent(QPaintEvent *event) {
     ++num_paint;
 }
 
+
 int MainWindow::get_uwb_point_info() {
-    uwb_label_position = QPoint(500, 100);
+    uwb_loc = ulm3_samples->getData();
+    uwb_label_position = QPoint(500 + uwb_loc.x * 6, 700 - uwb_loc.y * 6);
+    std::cout << uwb_label_position.x() <<',' << uwb_label_position.y()<<std::endl;
+
+//    uwb_label_position = QPoint(500, 100);
     return 0;
+}
+
+int MainWindow::uwb_initialise()
+{
+//    char pname[] = "/dev/ttyUSB1";
+//    ulm3_samples = ULM3Samples(pname);
+    //ulm3_samples.start();
 }
 
 
@@ -189,8 +204,8 @@ void MainWindow::timerEvent(QTimerEvent *event) {
 
         for (int num = 0; num < (int) count; ++num) {
             if (((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) &&
-                (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 90.f) ||
-                 ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 270.f))) {
+                (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 110.f) ||
+                 ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 250.f))) {
                 double x = origin_point.x() +
                            (nodes[num].dist_mm_q2 / 4.0f) *
                            sin((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
@@ -201,13 +216,11 @@ void MainWindow::timerEvent(QTimerEvent *event) {
 //                star.changeBlockState(int(x / 10), int(y / 10));
 //                std::cout << "x, y: " << x << ", " << y << " ";
 //                std::cout << "int (x, y): " << int(x / 10) << " " << int(y / 10) << " ";
-                int x_start_loc = int(x / 10) - 1;
-                int x_end_loc = int(x / 10) + 1;
-                int y_start_loc = int(y / 10) - 1;
-                int y_end_loc = int(y / 10) + 1;
+                int x_start = int(x / 10) - 2;
+                int y_start = int(y / 10) - 2;
 
-                for (int i = x_start_loc; i <= x_end_loc; ++i)
-                    for (int j = y_start_loc; j <= y_end_loc; ++j) {
+                for (int i = x_start; i <= x_start + 2; ++i)
+                    for (int j = y_start; j <= y_start + 2; ++j) {
                         star.changeBlockState(i, j);
 //                        std::cout << "x, y: " << x << ", " << y << " ";
 //                        std::cout << "i, j: " << i << ", " << j << " ";
@@ -256,7 +269,7 @@ void MainWindow::end_lidar() {
 
 void MainWindow::start_obstacle_avoidance() {
     system_status = obstacle_avoidance;
-    timer_id_obstacle_avoidance = startTimer(200);
+    timer_id_obstacle_avoidance = startTimer(500);
 }
 
 void MainWindow::end_obstacle_avoidance() {
@@ -267,6 +280,11 @@ MainWindow::~MainWindow() {
     lidar->stop();
     delay(20);
     lidar->setMotorSpeed(0);
+
+    if(ulm3_samples){
+        delete ulm3_samples;
+        ulm3_samples = nullptr;
+    }
 
     if (lidar) {
         delete lidar;

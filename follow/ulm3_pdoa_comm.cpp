@@ -2,16 +2,16 @@
 
 #include <iostream>
 
-void ULM3PDOAComm::openDev(char* dev_name)
+void ULM3PDOAComm::openDev(const char* dev_name)
 {
-    fd_ = open(dev_name, O_RDONLY | O_NOCTTY | O_RSYNC);
+    fd_ = open(dev_name, O_RDONLY | O_NOCTTY);
     if (-1 == fd_) {
         std::cerr << "Error opening serial port.";
         return;
     }
 }
 
-ULM3PDOAComm::ULM3PDOAComm(char* port_name)
+ULM3PDOAComm::ULM3PDOAComm(const char* port_name)
 {
     buffer.str = new char[1024];
     buffer.length = 0;
@@ -71,9 +71,9 @@ void ULM3PDOAComm::run()
     while (running_) {
         bytesRead = read(fd_, buffer.str, buffer.capacity);
         buffer.length = bytesRead;
-        /*for (int i = 0; i < bytesRead; i++) {
-            std::cout << buffer[i];
-        }*/
+        /* for (int i = 0; i < bytesRead; i++) {
+            std::cout << buffer.str[i];
+        } */
         ulm3_pdoa_callback_->hasSample(buffer);
     }
     close(fd_);
