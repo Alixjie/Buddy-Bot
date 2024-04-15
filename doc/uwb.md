@@ -105,3 +105,13 @@ The **std::size_t readSize()** is a private function to get size without lock mu
 This is the wrap class of above classes. It provide some interface to the outside. The most important is _getData()_ and _controlCar_. The first one is used to return the distance and degree between anchor and tag, and the second one is to indicate where should car go.
 
 Both of these functions are get the data from sync queue. In other words this is a typical producer-consumer model.
+
+The ideal workflow of this class will look like follow.
+
+1. When construct this class, it will try to open the serial port file.
+2. Explicitly call _start()_ function from the outside will start read data from serial port and write into the sync queue.
+3. If there is a outside function call _getData()_, it will pop an item from sync queue.
+4. If there is an outside function call _controlCar()_, it will pop 5 items from the sync queue and compute their weighted average. Send this result degree to an angle control function of the motor, and then block itself until the motor performs the change of angle and use the same way to tell the predetermined distance to the motor.
+5. This class does not take up any additional resources, so it only needs to call the destructors of the other classes that are included in its destructor.
+
+**Therefore if other functions or classes want to use this part, they could only include the head file "follow/ulm3_samples.h" and use .getData() or .controlCar() function don't need to worry about the low-level implementation details.**
