@@ -63,6 +63,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="follow_me">
+       <property name="text">
+        <string>Follow Me</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QPushButton" name="start_obstacle_avoidance">

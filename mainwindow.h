@@ -61,6 +61,8 @@ public slots:
 
     void voice_control_main();
 
+    void car_control_main();
+
 private:
     Ui::MainWindow *ui;
 

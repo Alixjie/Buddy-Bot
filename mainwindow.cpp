@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->quit_program, &QPushButton::clicked, this, &QApplication::quit);
 
     connect(ui->voice_control, &QPushButton::clicked, this, &MainWindow::voice_control_main);
+    connect(ui->follow_me, &QPushButton::clicked, this, &MainWindow::car_control_main);
 
     char pname[]="/dev/ttyUSB1";
     ulm3_samples = new ULM3Samples(pname);
@@ -291,6 +292,11 @@ void MainWindow::end_obstacle_avoidance() {
 void MainWindow::voice_control_main()
 {
     voice_control();
+}
+
+void MainWindow::car_control_main()
+{
+    ulm3_samples->controlCar();
 }
 
 MainWindow::~MainWindow() {
