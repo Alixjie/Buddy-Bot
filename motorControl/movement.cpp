@@ -19,7 +19,7 @@ sudo ./rot_enc_c
 volatile int countL=0, countR=0 ;
 static int vL_current=0,vR_current=0,target_count=0, a = 1; 
 static int b = 0;
-
+bool ready = false;//complete sign
 void callbackL(int wayL)
 {
    countL += wayL;
@@ -31,9 +31,9 @@ void callbackR(int wayR)
 
 
 static void timercallback(void){
-   //  read a,b
-   if((a==2)&&(b<0))//turn left
-      {if(b<0) target_count += countR;}
+   //  read mode, distance and angle
+   if((mode==2)&&(angle<0))//turn left
+      {target_count += countR;}
    else//other condition
       {target_count += countL;}
 
@@ -46,28 +46,39 @@ static void timercallback(void){
    if(countL<0)
    vL_current = countL-30;
 
-   if (a == 0)
+   if (mode == 0)
    {
    gpioPWM(27, 0);
    gpioPWM(22, 0); 
+   target_count = 0
+   ready = true; // Set the sign of work completed
    }
-   else if(a == 1)//go straight
+   else if(mode == 1)//go straight
    {
-      Speed(vL_current, vR_current);
-      printf("target_count = %d\n", target_count);
-      else if(target_count > b) { gpioPWM(27, 0); gpioPWM(22, 0); target_count = 0;a = 0;}// 10cm and longer:  b = 18*x(cm)
-   }    
-   else if(a == 2) //spin
-   {
-      spinSpeed(b,vL_current, vR_current);
-      if(abs(target_count)>b)   {gpioPWM(27, 0);  gpioPWM(22, 0);target_count = 0;;a = 0;} //90°  b = angle*10/3 + 0.004 angle*angle
-   }
+      if(target_count > (18*distance)) // 10cm and longer:  target_count= 18*x(cm)
+      { 
+         gpioPWM(27, 0); gpioPWM(22, 0); 
+         target_count = 0;mode = 0;
+      }
+      Speed(vL_current, vR_current); 
+      //printf("target_count = %d\n", target_count);
 
+   }    
+   else if(mode == 2) //spin
+   {
+      if(abs(target_count)>(abs(angle)*(10/3 +0.004*abs(angle))))   // target_count= angle*10/3 + 0.004 angle*angle
+      {
+         gpioPWM(27, 0);  gpioPWM(22, 0);
+         target_count = 0; mode = 0;
+      } 
+      spinSpeed(b,vL_current, vR_current);
+   }
+   cv.notify_one(); 
    countL = countR = 0;
 
 
 }
-
+sendcomple();
 int main(int argc, char *argv[])
 {
    if (gpioInitialise() < 0) return 1;
