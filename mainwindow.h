@@ -63,6 +63,8 @@ public slots:
 
     void car_control_main();
 
+    void car_come_here();
+
 private:
     Ui::MainWindow *ui;
 

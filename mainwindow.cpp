@@ -299,6 +299,24 @@ void MainWindow::car_control_main()
     ulm3_samples->controlCar();
 }
 
+void MainWindow::car_come_here()
+{
+    MoveControll& mc = MoveControll::getInstance();
+
+    for (std::list<Point>::iterator it = returnList.begin(); it != returnList.end(); ++it) {
+        int degree = atan(it->y / it->x)
+        mc.SetFromAngel(degree);
+        mc.sem.wait();
+        int distance = sqrt(it->y * it->y + it->x * it->x);
+        mc.SetFromDistance(distance);
+        mc.sem.wait();
+//                if ((it->x == star.getEndPoint().x) && (it->y == star.getEndPoint().y))
+//                    std::cout << "( " << it->x << ", " << it->y << " )";
+//                else
+//                    std::cout << "( " << it->x << ", " << it->y << " )" << " -> ";
+    }
+}
+
 MainWindow::~MainWindow() {
     lidar->stop();
     delay(20);
