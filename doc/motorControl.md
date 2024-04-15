@@ -22,15 +22,34 @@
      - 38 | GPIO20 | EA1 (Motor1 A phase)
      - 40 | GPIO21 | EB1 (Motor1 B phase)
 
-3. **PWM Generation**
-   - Utilize the pigpio library to output PWM control using GPIO22 (left wheel) and GPIO27 (right wheel), with a frequency of 10,000 kHz.
+**3. PWM Generation**
+   - Utilize the `pigpio.h` library for PWM output control on GPIO22 (left wheel) and GPIO27 (left wheel), with a frequency of 10,000 Hz.
 
-4. **Using Encoders for Speed Loop Control**
-   - Employ the pigpio library to capture the A and B directional encoder signals from both motors, counting the rising edges with callback functions callbackL and callbackR to accumulate counts. These counts are periodically sampled by timer0, stored into vLcurrent and vRcurrent, then cleared for recounting. The sampled vLcurrent and vRcurrent are used for feedback adjustment based on the target speed using a PID algorithm to correct the speed and adjust PWM output, completing the speed loop.
-   - Use the professor's encoder class, with two instances to capture the encoding signals from both motors.
+**4. Encoder-Based Speed Loop Control**
+   - Using `pigpio.h`, capture the A and B directional encoder signals from both left and right motors. Employ rising edge counting with callback functions `callbackL` and `callbackR` to accumulate counts. The accumulated count values are periodically captured by timer0, stored into `vLcurrent` and `vRcurrent`, and then reset for recounting. The captured `vLcurrent` and `vRcurrent` are adjusted based on the target speed using feedback from the difference values, employing a PID algorithm for speed correction, adjusting PWM output to complete the speed loop.
+   - Utilize two instances of the professor’s encoder class to collect encoder signals from the two motors.
+   - Numerical Explanation:
+     - `gpioSetTimerFunc(0, 54, timercallback);`
+     - Based on actual measurements, when the timer is set to 54ms, the differential in encoder count values matches the differential in control output PWM duty cycle. By adding a bias of +/-30, direct feedback correction to the target values can be made:
+       ```
+       if (countR > 0)
+           vR_current = countR + 30;
+       if (countR < 0)
+           vR_current = countR - 30;
+       if (countL > 0)
+           vL_current = countL + 30;
+       if (countL < 0)
+           vL_current = countL - 30;
+       ```
+     - **PID Speed Correction**:
+       - using `VelocityL(int Target_LV, int Current_LV)` and `VelocityR(int Target_RV, int Current_RV)` to correct the PWM output.
+       - The PWM adjustment is calculated using the incremental PID formula:
 
-5. **Accurate Angle and Displacement Control**
-   - Inside timer0, based on the target change in angle or displacement, accumulate the total count value target_count. The relationship between count values and actual angles and displacements is determined by formulas derived from practical measurement data:
+```math
+Pwm(t) = Kp \cdot [e(t) - e(t-1)] + Ki \cdot \sum e(t) + Kd \cdot [e(t) - 2e(t-1) + e(t-2)]
+
+**5. Precise Angle and Displacement Control**
+   - Inside timer0, based on the target change in angle or displacement, accumulate the total count value `target_count`. The relationship between count values and actual angles and displacements is derived from formulas based on practical measurement data:
      - `Target_count = distance * 18`
-     - `Target_count = (angle * 10 / 3) + 0.004 * angle * angle`
-   - Upon reaching the total count value, control the PWM to stop the cart and notify the data sending function via a condition function to signal command completion.
+     - `Target_count = angle * 10/3 + 0.004 * angle * angle`
+   - Upon reaching the total count value, control the PWM to stop the cart and use a condition function to notify the data sending function that the command has been completed.
