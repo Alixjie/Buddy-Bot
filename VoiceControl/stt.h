@@ -14,9 +14,8 @@
 #include <sstream>
 #include "coqui-stt.h"
 
-#include <QObject>
 
-#include "movecontrol/movecontrol.h"
+#inlcude "movecontrol.h"
 
 typedef struct SettingsStruct {
     char* source;
@@ -32,20 +31,6 @@ typedef struct SettingsStruct {
     const char* stream_capture_file;
     int stream_capture_duration;
 } Settings;
-
-class Worker : public QObject {
-    Q_OBJECT
-
-public:
-    Worker() : m_stop(false) {}
-
-public slots:
-    void doWork(const Operation &operation);
-    void stopWork();
-
-private:
-    bool m_stop;
-};
 
 
 
