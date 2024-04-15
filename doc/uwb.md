@@ -99,3 +99,9 @@ The **std::size_t size()** will return the current size by _((back + (capacity +
 The **void clear()** clear the queue by set front=back=0.
 
 The **std::size_t readSize()** is a private function to get size without lock mutex while size() must lock mutex.
+
+## ULM3Samples
+
+This is the wrap class of above classes. It provide some interface to the outside. The most important is _getData()_ and _controlCar_. The first one is used to return the distance and degree between anchor and tag, and the second one is to indicate where should car go.
+
+Both of these functions are get the data from sync queue. In other words this is a typical producer-consumer model.
