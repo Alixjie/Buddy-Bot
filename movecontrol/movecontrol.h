@@ -19,12 +19,15 @@ enum class Operation {
 
 class MoveControll { 
 public:
+
+    /*
     enum MoveState {
         STOP,
         FORWARD,
         SPIN,
         BACKWARD
     };
+    */
 
     static MoveControll& getInstance() {
         static MoveControll instance;
@@ -35,6 +38,11 @@ public:
     MoveControll(const MoveControll&) = delete;
     void operator=(const MoveControll&) = delete;
 
+    int getMovestate() const { return movestate; }
+    int getDistance() const { return Distance; }
+    int getAngle() const { return angle; }
+    void setMovestate(int state) { movestate = state; }
+
     int SetFromOperation(Operation operation);
     int SetFromAngel(int angle);
     int SetFromDistance(int distance);
@@ -43,26 +51,24 @@ public:
 
 
 private:
-    MoveState movestate;
-    unsigned int Distance;
+    int movestate;
+    int Distance;
     int angle;
 
     std::mutex m_mutex;
 
-     MoveControll() :movestate(STOP), Distance(0), angle(0) { }
+     MoveControll() :movestate(0), Distance(0), angle(0) { }
 
-    MoveState getMovestate() const { return movestate; }
-    void setMovestate(MoveState state) { movestate = state; }
 
-    unsigned int getDistance() const { return Distance; }
+
     void setDistance(unsigned int distance) { Distance = distance; }
 
-    int getAngle() const { return angle; }
+
     void setAngle(int angle) { this->angle = angle; }
 
     void Stop();
 
-    void SetMoveState(MoveState movestate , unsigned int Distance, int anlge);
+    void SetMoveState(int movestate , int Distance, int anlge);
     
 
 };

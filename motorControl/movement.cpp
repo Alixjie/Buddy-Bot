@@ -17,9 +17,6 @@ sudo ./rot_enc_c
 
 一圈计数265
 */
-volatile int countL=0, countR=0 ;
-static int vL_current=0,vR_current=0,target_count=0, a = 1; 
-static int b = 0;
 void callbackL(int wayL)
 {
    countL += wayL;
@@ -32,6 +29,10 @@ void callbackR(int wayR)
 
 static void timercallback(void){
    //  read mode, distance and angle
+   mode = MoveControll.getInstance().getMovestate();
+   int distance = MoveControll.getInstance().getDistance();
+   int angle = MoveControll.getInstance().getAngle();
+
    if((mode==2)&&(angle<0))//turn left
       {target_count += countR;}
    else//other condition
@@ -58,7 +59,8 @@ static void timercallback(void){
       if(target_count > (18*distance)) // 10cm and longer:  target_count= 18*x(cm)
       { 
          gpioPWM(27, 0); gpioPWM(22, 0); 
-         target_count = 0;mode = 0;
+         target_count = 0;
+         MoveControll.getInstance().setMovestate(0);
       }
       Speed(vL_current, vR_current); 
       //printf("target_count = %d\n", target_count);
@@ -69,7 +71,8 @@ static void timercallback(void){
       if(abs(target_count)>(abs(angle)*(10/3 +0.004*abs(angle))))   // target_count= angle*10/3 + 0.004 angle*angle
       {
          gpioPWM(27, 0);  gpioPWM(22, 0);
-         target_count = 0; mode = 0;
+         target_count = 0;
+          MoveControll.getInstance().setMovestate(0);
       } 
       spinSpeed(b,vL_current, vR_current);
    }
