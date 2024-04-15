@@ -15,7 +15,7 @@
 #include "coqui-stt.h"
 
 
-#inlcude "movecontrol.h"
+#include "movecontrol/movecontrol.h"
 
 typedef struct SettingsStruct {
     char* source;

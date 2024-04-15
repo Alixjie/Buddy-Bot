@@ -135,7 +135,7 @@ void ULM3Samples::controlCar()
     MoveControll& mc = MoveControll::getInstance();
     while (true) {
         control_param current_control = getControl();
-        std::cout << current_control.distance << ", " << current_control.degree << std::endl;
+        std::cout << current_control.distance << ",1 , " << current_control.degree << std::endl;
         mc.SetFromAngel(current_control.degree);
         mc.sem.wait();
         mc.SetFromDistance(current_control.distance);

@@ -268,11 +268,11 @@ void handle_Operation(Operation operation) {
         }
     }
 
-    MoveControl::getInstance()->SetFromOperation(operation);
+    MoveControll::getInstance().SetFromOperation(operation);
 
     lastOperation = operation;
     lastOperationTime = QTime::currentTime();
-
+}
 
 //This function is adapted from the sochcat example code
 static bool process_live_input(const Settings* settings, ModelState* model_state) {
