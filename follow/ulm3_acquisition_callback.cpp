@@ -43,20 +43,22 @@ void ULM3AcquisitionCallback::hasSample(const simple_string &uwb_string)
     param.distance = current_data_.distance_cm;
     param.degree = current_data_.aoa_deg;
 
-    struct timespec begin, end;
+    // struct timespec begin, end;
 
-    clock_gettime(CLOCK_REALTIME, &begin);
+    // clock_gettime(CLOCK_REALTIME, &begin);
 
-    sync_queue_->push(param, 500);
+    if (!sync_queue_->push(param, 500)) {
+        sync_queue_->clear();
+    }
 
-    clock_gettime(CLOCK_REALTIME, &end);
+    // clock_gettime(CLOCK_REALTIME, &end);
 
     // Discard those data that has exsited in queue more than 500ms
-    long seconds = end.tv_sec - begin.tv_sec;
+    /*long seconds = end.tv_sec - begin.tv_sec;
     long nanoseconds = end.tv_nsec - begin.tv_nsec;
     long elapsed = seconds * 1000 + nanoseconds / 1000;
 
     if (elapsed > 500) {
         sync_queue_->clear();
-    }
+    }*/
 }

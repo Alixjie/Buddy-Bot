@@ -3,6 +3,7 @@
 
 // #include "kalman_filter.h"
 #include <cmath>
+#include <condition_variable>
 #include <mutex>
 #include <thread>
 
@@ -23,6 +24,7 @@ public:
     void start();
     output_data getData();
     control_param getControl();
+    void controlCar();
 
     /*void registerControl(void (*distanceControl)(int),
                          void (*degreeControl)(int));*/
@@ -34,7 +36,7 @@ private:
     // std::mutex mutex_;
     // int following_;
     // std::thread followThread;
-    //  KalmanFilter filter_;
+    // KalmanFilter filter_;
     static constexpr char default_name[] = "/dev/ttyUSB1";
     SyncQueue<control_param> sync_queue_;
     ULM3PDOAComm ulm3_pdoa_comm_;
