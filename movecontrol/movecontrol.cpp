@@ -26,7 +26,7 @@ void MoveControll::Stop() {
 int MoveControll::SetFromOperation(Operation operation) {
     switch (operation) {
         case Operation::COME:
-        // may leave to another control mode here
+        // TO DO
             break;
         case Operation::LEFT:
             SetFromAngel(-90);
@@ -38,7 +38,7 @@ int MoveControll::SetFromOperation(Operation operation) {
             Stop();
             break;
         case Operation::FOLLOW:
-        // may leave to another control mode here
+        // TO DO
             break;
         case Operation::GO:
             SetFromDistance(100);

@@ -18,9 +18,6 @@
 #include <iterator>
 #include <cstring>
 
-
-#include <QThread>
-#include <QObject>
 #include <QTime>
 #include <iostream>
 
@@ -51,7 +48,6 @@ std:c:vector<short> loadAudioFile(const std::string& filename) {
     return buffer;
 }
 */
-
 int read_mode_from_file(const std::string& mode_dir) {
     std::ifstream file(mode_dir);
     if (!file.is_open()) {
@@ -258,22 +254,10 @@ static Operation output_streaming_transcript(const Metadata* current_metadata,
     return operation;
 }
 
-void Worker::doWork(const Operation &operation) {
-    //motorControl(parameter);
-    std::cout << "Operation test" << std::endl;
-
-    /*
-    while (!m_stop) {
-    }
-    */
-}
-
-void Worker::stopWork() {
-    m_stop = true;
-}
 
 
-void startNewThread(QThread*& thread, Worker*& worker, const Operation& operation) {
+void handle_Operation(Operation operation) {
+
     static Operation lastOperation;
     static QTime lastOperationTime = QTime::currentTime();
 
@@ -284,25 +268,11 @@ void startNewThread(QThread*& thread, Worker*& worker, const Operation& operatio
         }
     }
 
-    if (worker) {
-        worker->stopWork();
-        thread->quit();
-        thread->wait();
-        delete thread;
-        delete worker;
-    }
-
-    thread = new QThread;
-    worker = new Worker;
-    worker->moveToThread(thread);
-    QObject::connect(thread, &QThread::started, worker, std::bind(&Worker::doWork, worker, operation));
-    QObject::connect(thread, &QThread::finished, worker, &Worker::deleteLater);
-    QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
-    thread->start();
+    MoveControl::getInstance()->SetFromOperation(operation);
 
     lastOperation = operation;
     lastOperationTime = QTime::currentTime();
-}
+
 
 //This function is adapted from the sochcat example code
 static bool process_live_input(const Settings* settings, ModelState* model_state) {
@@ -348,8 +318,6 @@ static bool process_live_input(const Settings* settings, ModelState* model_state
 
     Metadata* previous_metadata = NULL;
     Operation operation = Operation::NONE;
-    QThread* thread = nullptr;
-    Worker* worker = nullptr;
   while (true) {
     int read_error;
     const int read_result = pa_simple_read(source_stream, source_buffer,
@@ -374,7 +342,7 @@ static bool process_live_input(const Settings* settings, ModelState* model_state
 
     operation = output_streaming_transcript(current_metadata, previous_metadata);
     if (operation != Operation::NONE) {
-        startNewThread(thread, worker, operation);
+        handle_Operation(operation);
     }
 
 
