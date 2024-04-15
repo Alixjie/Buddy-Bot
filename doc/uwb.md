@@ -49,7 +49,7 @@ The life cycle of this class:
 
 **Note 1**: The step 4 adjustment the data. In the previous versions, we think this class need to give the speed to motor, only two kinds of speed: stop or running, while in later we change the design, but in that time we have a lot of code, thus I did not change the struct, I just didn't use the speed property.
 
-**Note 2**: In the step Push the data to a synchronous queue. This is a cycle queue with a fixed length so when queue is full, the writer thread (this thread) must wait for the customer thread (other data which wants to get UWB data) to pop the front data. Therefore if push operation takes more than we need to judge, if pushing this data wait for more than a pre-setted time (500ms) cancel this push. And I will compute the time of this push operation through time values _begin_ and _end_ if duration more than 500ms, discard this data and the data in queue because I do not know the push operation is end by successfully pushing or time out.
+**Note 2**: In the step 6. Push the data to a synchronous queue. This is a circular queue with a fixed length so when queue is full, the writer thread (this thread) must wait for the customer thread (other data which wants to get UWB data) to pop the front data. Therefore if push operation takes more than we need to judge, if pushing this data wait for more than a pre-setted time (500ms) cancel this push. And I will compute the time of this push operation through time values _begin_ and _end_ if duration more than 500ms, discard this data and the data in queue because I do not know the push operation is end by successfully pushing or time out.
 
 The function of this class:
 
@@ -57,3 +57,31 @@ The function of this class:
 - ~ULM3AcquisitionCallback();
 - virtual void hasSample();
 - void getSample(const simple_string &sip_str);
+
+## SyncQueue
+
+This is a circular synchronized queue work for multi-threaded interactions.
+
+This queue use mutex and conditional variable to implement mutual exclusion and wake up blocked thread.
+
+This is a template class so it should write in a head file instead split to source file and head file.
+
+This class has following functions:
+
+- SyncQueue(const std::size_t capacity);
+- void push(const value_type &item);
+- void push(const value_type &item, uint delay);
+- value_type waitAndPop();
+- void \*waitAndPop(uint l, value_type \*items);
+- bool tryPop(value_type &item);
+- value_type frontItem();
+- std::size_t size();
+- void clear();
+- std::size_t readSize();
+
+There is a vector<value_type> to store data.
+In the constructor function, I use reserve to ask vector to allocate a memory with capacity + 1 since the circular needs one more empty site to distinguish queue is full or empty.
+
+The **void push(const value_type &item)** function is used to push a data to queue. However this queue has the fixed length, so it should wait for queue not full. I use _std::condition_variable_ to implement this.
+
+The **void push(const value_type &item, uint delay)** function is the overload of above function, and it can will only wait for delay ms, if time out discard 

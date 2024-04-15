@@ -1,5 +1,9 @@
 #include "ulm3_samples.h"
 
+#include <condition_variable>
+#include <mutex>
+#include "ulm3_acquisition_callback.h"
+
 // #include "kalman_filter.h"
 /*KalmanFilter initialize_filter()
 {
@@ -119,13 +123,23 @@ control_param ULM3Samples::getControl()
     if (result.distance < 30) {
         result.distance = 10;
     }
-    if (result.degree < 45 && result.degree > 0) {
-        result.degree = 45;
-    } else if (result.degree > -45 && result.degree < 0) {
-        result.degree = -45;
+    if (result.degree < 15 && result.degree > 0) {
+        result.degree = 15;
+    } else if (result.degree > -15 && result.degree < 0) {
+        result.degree = -15;
     }
 
     return result;
+}
+
+void ULM3Samples::controlCar()
+{
+    // while(true){
+        control_param current_control = getControl();
+        // MoveControll::SetFromAngel(current_control.degree);
+        // class.getInstance().sem.wait();
+        // MoveControll::SetFromDistance(current_control.distance);
+    //}
 }
 
 /*void ULM3Samples::run_follow()

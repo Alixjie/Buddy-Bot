@@ -59,12 +59,24 @@ public:
         notEmpty_.notify_one();
     }
 
-    void push(const value_type &item, uint delay)
+    bool push(const value_type &item, uint delay)
     {
         std::unique_lock<std::mutex> lock_write(mutex_write_);
-        // Wait for queue not full.
+
+        struct timespec begin, end;
+        clock_gettime(CLOCK_REALTIME, &begin);
         notFull_.wait_for(lock_write, std::chrono::milliseconds(delay),
                           [this] { return readSize() < capacity_; });
+
+        clock_gettime(CLOCK_REALTIME, &end);
+
+        long seconds = end.tv_sec - begin.tv_sec;
+        long nanoseconds = end.tv_nsec - begin.tv_nsec;
+        long elapsed = seconds * 1000 + nanoseconds / 1000;
+
+        if (elapsed>delay){
+            return false;
+        }
 
         // Start writing, so prevent others read and write.
         std::unique_lock<std::mutex> lock_read(mutex_read_);
@@ -72,6 +84,8 @@ public:
         back_ = (back_ + 1) % (capacity_ + 1);
 
         notEmpty_.notify_one();
+
+        return true;
     }
 
     /**
