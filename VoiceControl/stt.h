@@ -16,16 +16,7 @@
 
 #include <QObject>
 
-
-enum class Operation {
-    COME,
-    LEFT,
-    RIGHT,
-    STOP,
-    FOLLOW,
-    GO,
-    NONE  //no operation
-};
+#inlcude movecontrol.h
 
 typedef struct SettingsStruct {
     char* source;

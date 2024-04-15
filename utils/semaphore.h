@@ -6,13 +6,13 @@
 
 class Semaphore {
 public:
-    Semaphore(const int count = 0);
+    Semaphore(bool state = false);
     Semaphore();
     void signal();
     void wait();
 
 private:
-    int count_;
+    bool state_;
     std::mutex mutex_;
     std::condition_variable condition_;
 };
