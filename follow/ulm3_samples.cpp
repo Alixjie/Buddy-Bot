@@ -1,7 +1,6 @@
 #include "ulm3_samples.h"
 
-#include <condition_variable>
-#include <mutex>
+#include "../movecontrol/movecontrol.h"
 #include "ulm3_acquisition_callback.h"
 
 // #include "kalman_filter.h"
@@ -134,12 +133,13 @@ control_param ULM3Samples::getControl()
 
 void ULM3Samples::controlCar()
 {
-    // while(true){
+    while (true) {
         control_param current_control = getControl();
-        // MoveControll::SetFromAngel(current_control.degree);
-        // class.getInstance().sem.wait();
-        // MoveControll::SetFromDistance(current_control.distance);
-    //}
+        MoveControll::getInstance().SetFromAngel(current_control.degree);
+        MoveControll::getInstance().sem.wait();
+        MoveControll::getInstance().SetFromDistance(current_control.distance);
+        MoveControll::getInstance().sem.wait();
+    }
 }
 
 /*void ULM3Samples::run_follow()

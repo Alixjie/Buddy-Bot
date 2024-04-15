@@ -43,13 +43,13 @@ The life cycle of this class:
 2. Get the char array and use a function to pretreament it to get split data.
 3. If this is the first acquire data, new a memory which the length is same as buffer in ULM3PDOAComm to the _split_buffer_. This pointer used to store the current string from ULM3PDOAComm.
 4. Make some simple adjustments to the data.
-5. Declare two time value _begin_, _end_. And push the data to a synchronous queue.
+5. Push the data to a synchronous queue.
 6. If the push operation takes longer than the preset value, here it is 500ms, discard this data and the data in the queue.
 7. In deconstructor, if _split_buffer_ unequal to nullptr then delete that memory to prevent memory leaks.
 
 **Note 1**: The step 4 adjustment the data. In the previous versions, we think this class need to give the speed to motor, only two kinds of speed: stop or running, while in later we change the design, but in that time we have a lot of code, thus I did not change the struct, I just didn't use the speed property.
 
-**Note 2**: In the step 6. Push the data to a synchronous queue. This is a circular queue with a fixed length so when queue is full, the writer thread (this thread) must wait for the customer thread (other data which wants to get UWB data) to pop the front data. Therefore if push operation takes more than we need to judge, if pushing this data wait for more than a pre-setted time (500ms) cancel this push. And I will compute the time of this push operation through time values _begin_ and _end_ if duration more than 500ms, discard this data and the data in queue because I do not know the push operation is end by successfully pushing or time out.
+**Note 2**: In the step 6. Push the data to a synchronous queue. This is a circular queue with a fixed length so when queue is full, the writer thread (this thread) must wait for the customer thread (other data which wants to get UWB data) to pop the front data. Therefore if push operation takes more than we need to judge, if pushing this data wait for more than a pre-setted time (500ms) cancel this push. This function will return a bool variable, false means timeout, and I can determine discard all data in queue or not.
 
 The function of this class:
 
@@ -84,4 +84,4 @@ In the constructor function, I use reserve to ask vector to allocate a memory wi
 
 The **void push(const value_type &item)** function is used to push a data to queue. However this queue has the fixed length, so it should wait for queue not full. I use _std::condition_variable_ to implement this.
 
-The **void push(const value_type &item, uint delay)** function is the overload of above function, and it can will only wait for delay ms, if time out discard 
+The **void push(const value_type &item, uint delay)** function is the overload of above function, and it can will only wait for delay ms, if time out, discard this data and return **false** otherwise push the data normally.
