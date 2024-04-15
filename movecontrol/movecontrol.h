@@ -29,12 +29,10 @@ public:
     };
     */
 
-    static MoveControll* getInstance() {
-        if (instance == nullptr)
-            instance = new MoveControll();
+    static MoveControll& getInstance();
 
-            return instance;
-    }
+    MoveControll(const MoveControll&) = delete;
+    MoveControll& operator=(const MoveControll&) = delete;
 
     int getMovestate() const { return movestate; }
     int getDistance() const { return Distance; }
@@ -59,7 +57,6 @@ private:
     std::mutex m_mutex;
 
     MoveControll() :movestate(0), Distance(0), angle(0), sem(false) {
-        instance = nullptr;
     }
 
 

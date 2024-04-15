@@ -31,11 +31,12 @@ void callbackR(int wayR)
 }
 
 
-static void timercallback(void){
+void timercallback(void){
+   MoveControll& mc = MoveControll::getInstance();
    //  read mode, distance and angle
-   mode = MoveControll::getInstance()->getMovestate();
-   int distance = MoveControll::getInstance()->getDistance();
-   int angle = MoveControll::getInstance()->getAngle();
+   mode = mc.getMovestate();
+   int distance = mc.getDistance();
+   int angle = mc.getAngle();
 
    if((mode==2)&&(angle<0))//turn left
       {target_count += countR;}
@@ -56,7 +57,7 @@ static void timercallback(void){
    gpioPWM(27, 0);
    gpioPWM(22, 0); 
    target_count = 0;
-   MoveControll::getInstance()->sem.signal();// Set the sign of work completed
+   mc.sem.signal();// Set the sign of work completed
    }
    else if(mode == 1)//go straight
    {
@@ -64,7 +65,7 @@ static void timercallback(void){
       { 
          gpioPWM(27, 0); gpioPWM(22, 0); 
          target_count = 0;
-         MoveControll::getInstance()->setMovestate(0);
+         mc.setMovestate(0);
       }
       Speed(vL_current, vR_current); 
       //printf("target_count = %d\n", target_count);
@@ -76,7 +77,7 @@ static void timercallback(void){
       {
          gpioPWM(27, 0);  gpioPWM(22, 0);
          target_count = 0;
-          MoveControll::getInstance()->setMovestate(0);
+         mc.setMovestate(0);
       } 
       spinSpeed(angle,vL_current, vR_current);
    }

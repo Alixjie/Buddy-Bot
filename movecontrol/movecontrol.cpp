@@ -3,6 +3,13 @@
 #include <stdlib.h>
 
 
+
+MoveControll& MoveControll::getInstance() {
+    static MoveControll instance;
+    return instance;
+}
+
+
 void MoveControll::SetMoveState(int movestate , int Distance, int anlge) {
     std::lock_guard<std::mutex> lock(m_mutex);
     setMovestate(movestate);

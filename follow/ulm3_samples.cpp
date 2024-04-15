@@ -132,12 +132,13 @@ control_param ULM3Samples::getControl()
 
 void ULM3Samples::controlCar()
 {
+    MoveControll& mc = MoveControll::getInstance();
     while (true) {
         control_param current_control = getControl();
-        MoveControll::getInstance()->SetFromAngel(current_control.degree);
-        MoveControll::getInstance()->sem.wait();
-        MoveControll::getInstance()->SetFromDistance(current_control.distance);
-        MoveControll::getInstance()->sem.wait();
+        mc.SetFromAngel(current_control.degree);
+        mc.sem.wait();
+        mc.SetFromDistance(current_control.distance);
+        mc.sem.wait();
     }
 }
 

@@ -8,7 +8,7 @@
 
 //a = 1, b = 0; 
 
-static void timercallback(void);
+void timercallback(void);
 void callbackL(int wayL);
 void callbackR(int wayR);
 
