@@ -302,9 +302,10 @@ void MainWindow::car_control_main()
 void MainWindow::car_come_here()
 {
     MoveControll& mc = MoveControll::getInstance();
+    std::list <Point> &returnList = star.getReturnList();
 
     for (std::list<Point>::iterator it = returnList.begin(); it != returnList.end(); ++it) {
-        int degree = atan(it->y / it->x)
+        int degree = atan(it->y / it->x);
         mc.SetFromAngel(degree);
         mc.sem.wait();
         int distance = sqrt(it->y * it->y + it->x * it->x);

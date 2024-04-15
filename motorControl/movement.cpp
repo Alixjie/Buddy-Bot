@@ -7,7 +7,7 @@
 
 volatile int countL=0, countR=0;
 static int vL_current=0,vR_current=0,target_count=0;
-static int mode = 0;
+static int mode = 0,number = 0;
 /*
 
 TO BUILD
@@ -37,7 +37,7 @@ void timercallback(void){
    mode = mc.getMovestate();
    int distance = mc.getDistance();
    int angle = mc.getAngle();
-   printf("mode=%d, distance=%d, angle-%d\n", mode,distance,angle);
+
 
    if((mode==2)&&(angle<0))//turn left
       {target_count += countR;}
@@ -53,12 +53,20 @@ void timercallback(void){
    if(countL<0)
    vL_current = countL-30;
 
+
+   printf("mode=%d, distance=%d, angle=%d, countR=%d, countL=%d, target_count=%d\n", mode,distance,angle,countR,countL,target_count);
    if (mode == 0)
    {
    gpioPWM(27, 0);
    gpioPWM(22, 0); 
-   target_count = 0;
-   mc.sem.signal();// Set the sign of work completed
+   if(countL == 0 | countR == 0){
+       target_count = 0;
+     // if(number==2){
+         mc.sem.signal();// Set the sign of work completed
+       //  number=0;
+      //}
+      //number+=1;
+   }
    }
    else if(mode == 1)//go straight
    {
@@ -68,7 +76,7 @@ void timercallback(void){
          target_count = 0;
          mc.setMovestate(0);
       }
-      Speed(vL_current, vR_current); 
+      Speed(vL_current, vR_current);
       //printf("target_count = %d\n", target_count);
 
    }    

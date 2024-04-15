@@ -16,7 +16,6 @@ void clearALL()
     ClearAIN();
     ClearBIN();
 }
-float Kp = 1.1,  Ki = 0.5,  Kd =0; 
 
 int VelocityL(int Target_LV, int Current_LV)
 {
@@ -49,15 +48,14 @@ int VelocityR(int Target_RV, int Current_RV)
 void Speed(int current_vL,int current_vR)
 {
     int vL, vR; 
-    if(current_vL>0) direction(0);
-    if(current_vL<0) direction(1);
-    vL = VelocityL(60,abs(current_vL)); 
-    vR = VelocityR(60,abs(current_vR)); 
+    direction(0);
+    vL = VelocityL(60,current_vL); 
+    vR = VelocityR(60,current_vR); 
    // std::cout<<vL<<", "<<vR<<std::endl;
     gpioPWM(27,vR);
     gpioPWM(22,vL);
 }
-void spinSpeed(float b, int current_vL,int current_vR)
+void spinSpeed(int b, int current_vL,int current_vR)
 {
     int vL, vR; 
     
