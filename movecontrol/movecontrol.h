@@ -62,7 +62,7 @@ private:
 
     void Stop();
 
-    void MoveControll::SetMoveState(MoveState movestate , unsigned int Distance, int anlge);
+    void SetMoveState(MoveState movestate , unsigned int Distance, int anlge);
     
 
 };
