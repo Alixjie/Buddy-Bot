@@ -1,6 +1,7 @@
 // movecontrol.cpp
 #include "movecontrol.h"
 #include <stdlib.h>
+#include <iostream>
 
 
 
@@ -15,6 +16,7 @@ void MoveControll::SetMoveState(int movestate , int Distance, int anlge) {
     setMovestate(movestate);
     setDistance(Distance);
     setAngle(anlge);
+    std::cout << movestate << Distance << angle <<std::endl;
 }
 
 

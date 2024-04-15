@@ -11,6 +11,6 @@ void Semaphore::signal() {
 
 void Semaphore::wait() {
     std::unique_lock<std::mutex> lock(mutex_);
-    condition_.wait(lock, [this] { return state_; });
     state_ = false;
+    condition_.wait(lock, [this] { return state_; });
 }

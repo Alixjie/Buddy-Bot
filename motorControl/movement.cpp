@@ -37,6 +37,7 @@ void timercallback(void){
    mode = mc.getMovestate();
    int distance = mc.getDistance();
    int angle = mc.getAngle();
+   printf("mode=%d, distance=%d, angle-%d\n", mode,distance,angle);
 
    if((mode==2)&&(angle<0))//turn left
       {target_count += countR;}
