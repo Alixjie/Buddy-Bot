@@ -28,6 +28,11 @@ SOURCES += \
     hal/thread.cpp \
     main.cpp \
     mainwindow.cpp \
+    motorControl/encoder.cpp \
+    motorControl/motorDriver.cpp \
+    motorControl/movement.cpp \
+    motorControl/pwm.cpp \
+    movecontrol/movecontrol.cpp \
     rplidar_driver.cpp \
     sl_async_transceiver.cpp \
     sl_crc.cpp \
@@ -35,7 +40,8 @@ SOURCES += \
     sl_lidarprotocol_codec.cpp \
     sl_serial_channel.cpp \
     sl_tcp_channel.cpp \
-    sl_udp_channel.cpp
+    sl_udp_channel.cpp \
+    utils/semaphore.cpp
 
 HEADERS += \
     AStar.h \
@@ -72,6 +78,11 @@ HEADERS += \
     hal/util.h \
     hal/waiter.h \
     mainwindow.h \
+    motorControl/encoder.hpp \
+    motorControl/motorDriver.hpp \
+    motorControl/movement.hpp \
+    motorControl/pwm.hpp \
+    movecontrol/movecontrol.h \
     rplidar.h \
     rplidar_cmd.h \
     rplidar_driver.h \
@@ -86,7 +97,8 @@ HEADERS += \
     sl_lidar_driver_impl.h \
     sl_lidar_protocol.h \
     sl_lidarprotocol_codec.h \
-    sl_types.h
+    sl_types.h \
+    utils/semaphore.h
 
 FORMS += \
     mainwindow.ui

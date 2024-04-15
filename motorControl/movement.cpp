@@ -1,9 +1,9 @@
 #include <pigpio.h>
-#include "encoder.hpp"
-#include "pwm.hpp"
-#include "motorDriver.hpp"
-#include "movement.hpp"
-#include "../movecontrol/movecontrol.h"
+#include "motorControl/encoder.hpp"
+#include "motorControl/pwm.hpp"
+#include "motorControl/motorDriver.hpp"
+#include "motorControl/movement.hpp"
+#include "movecontrol/movecontrol.h"
 /*
 
 TO BUILD
@@ -85,8 +85,7 @@ int main(int argc, char *argv[])
    re_decoder decL(20, 21, callbackL);
 
    //Periodically calling timercallback to change the motion status and keep speed-loop.
-   gpioSetTimerFunc(0, 54, timercallback);    
-
+   gpioSetTimerFunc(0, 54, timercallback);
    //clear all
    gpioSetTimerFunc(0, 0, nullptr);
    clearALL();
