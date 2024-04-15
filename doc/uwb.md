@@ -72,7 +72,7 @@ This class has following functions:
 - void push(const value_type &item);
 - void push(const value_type &item, uint delay);
 - value_type waitAndPop();
-- void \*waitAndPop(uint l, value_type \*items);
+- void waitAndPop(uint l, value_type \*items);
 - bool tryPop(value_type &item);
 - value_type frontItem();
 - std::size_t size();
@@ -85,3 +85,17 @@ In the constructor function, I use reserve to ask vector to allocate a memory wi
 The **void push(const value_type &item)** function is used to push a data to queue. However this queue has the fixed length, so it should wait for queue not full. I use _std::condition_variable_ to implement this.
 
 The **void push(const value_type &item, uint delay)** function is the overload of above function, and it can will only wait for delay ms, if time out, discard this data and return **false** otherwise push the data normally.
+
+The **value_type waitAndPop()** will wait for queue not empty and pop an item.
+
+The **void waitAndPop(uint l, value_type \*items)** will wait for queue untill there are not less than _l_ items and pop _l_ items.
+
+The **bool tryPop(value_type &item)** will try to pop an item, if could not pop, return false immediately.
+
+The **value_type frontItem()** will return the front item but do not pop it.
+
+The **std::size_t size()** will return the current size by _((back + (capacity + 1)) - front) % (capacity + 1)_ if front >= back or _front-back_ if back < front.
+
+The **void clear()** clear the queue by set front=back=0.
+
+The **std::size_t readSize()** is a private function to get size without lock mutex while size() must lock mutex.
