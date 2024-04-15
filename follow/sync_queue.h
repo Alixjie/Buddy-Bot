@@ -107,7 +107,7 @@ public:
         return item;
     }
 
-    void *waitAndPop(uint l, value_type *items)
+    void waitAndPop(uint l, value_type *items)
     {
         std::unique_lock<std::mutex> lock_write(mutex_write_);
 
@@ -121,7 +121,6 @@ public:
         }
 
         notFull_.notify_one();
-        return items;
     }
 
     /**
