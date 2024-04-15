@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 
-void MoveControll::SetMoveState(MoveState movestate , unsigned int Distance, int anlge) {
+void MoveControll::SetMoveState(int movestate , int Distance, int anlge) {
     std::lock_guard<std::mutex> lock(m_mutex);
     setMovestate(movestate);
     setDistance(Distance);
@@ -12,7 +12,7 @@ void MoveControll::SetMoveState(MoveState movestate , unsigned int Distance, int
 
 
 void MoveControll::Stop() {
-    SetMoveState(STOP, 0, 0);
+    SetMoveState(0, 0, 0);
 }
 
 
@@ -49,7 +49,7 @@ int MoveControll::SetFromAngel(int angle) {
     if (angle < -90 || angle > 90) {
         return -1;  // Invalid angle
     }
-        SetMoveState(SPIN, 0, angle);
+        SetMoveState(2, 0, angle);
     return 0;  // Success
 }
 
@@ -58,7 +58,7 @@ int MoveControll::SetFromDistance(int distance) {
     if (distance < 0) {
         return -1;  // Invalid distance
     }
-    SetMoveState(FORWARD, distance, 0);
+    SetMoveState(1, distance, 0);
     return 0;  // Success
 }
 
