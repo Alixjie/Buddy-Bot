@@ -64,13 +64,13 @@ void spinSpeed(float b, int current_vL,int current_vR)
     if(b>0) //右转
     {
     AIN(1);
-    clearBIN(0);
+    ClearBIN();
     vL = VelocityL(50,abs(current_vL)); 
     vR = 0;
     }
     if(b<0) //左转
     {
-    clearAIN(0);
+    ClearAIN();
     BIN(1);
     vL = 0;
     vR = VelocityR(50,abs(current_vR)); 
@@ -96,14 +96,14 @@ if(mode==1)
 //左转
 if(mode==2)
 	{
-    clearAIN(0);
+    ClearAIN();
     BIN(1);
 	}
 //右转
 if(mode==3)   
 	{
     AIN(1);
-    clearBIN(0);
+    ClearBIN();
 	 }
 //停止
 if(mode==4)

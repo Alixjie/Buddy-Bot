@@ -29,14 +29,12 @@ public:
     };
     */
 
-    static MoveControll& getInstance() {
-        static MoveControll instance;
-        return instance;
+    static MoveControll* getInstance() {
+        if (instance == nullptr)
+            instance = new MoveControll();
+
+            return instance;
     }
-
-
-    MoveControll(const MoveControll&) = delete;
-    void operator=(const MoveControll&) = delete;
 
     int getMovestate() const { return movestate; }
     int getDistance() const { return Distance; }
@@ -49,16 +47,20 @@ public:
 
     Semaphore sem;
 
+    static MoveControll *instance;
+
 
 private:
     int movestate;
     int Distance;
     int angle;
 
+
     std::mutex m_mutex;
 
-     MoveControll() :movestate(0), Distance(0), angle(0) { }
-
+    MoveControll() :movestate(0), Distance(0), angle(0), sem(false) {
+        instance = nullptr;
+    }
 
 
     void setDistance(unsigned int distance) { Distance = distance; }
