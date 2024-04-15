@@ -44,10 +44,9 @@
      - **PID Speed Correction**:
        - using `VelocityL(int Target_LV, int Current_LV)` and `VelocityR(int Target_RV, int Current_RV)` to correct the PWM output.
        - The PWM adjustment is calculated using the incremental PID formula:
-
-```math
-Pwm(t) = Kp \cdot [e(t) - e(t-1)] + Ki \cdot \sum e(t) + Kd \cdot [e(t) - 2e(t-1) + e(t-2)]
-
+       - ```math
+           Pwm(t) = Kp \cdot [e(t) - e(t-1)] + Ki \cdot \sum e(t) + Kd \cdot [e(t) - 2e(t-1) + e(t-2)]
+          ```
 **5. Precise Angle and Displacement Control**
    - Inside timer0, based on the target change in angle or displacement, accumulate the total count value `target_count`. The relationship between count values and actual angles and displacements is derived from formulas based on practical measurement data:
      - `Target_count = distance * 18`
