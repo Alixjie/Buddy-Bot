@@ -15,6 +15,10 @@
 #include "AStar.h"
 #include "follow/ulm3_samples.h"
 #include "VoiceControl/stt.h"
+#include "motorControl/movement.hpp"
+#include "motorControl/encoder.hpp"
+#include "motorControl/pwm.hpp"
+#include "motorControl/motorDriver.hpp"
 
 #define lidar_scan 1
 #define obstacle_avoidance 2
@@ -71,6 +75,9 @@ private:
 
     QPoint origin_point;
     QPoint uwb_label_position;
+
+    re_decoder *decR;
+    re_decoder *decL;
 
     int num_paint;
     int timer_id_lidar_scan;

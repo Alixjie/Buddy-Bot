@@ -1,4 +1,4 @@
-cQT       += core gui
+QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -111,7 +111,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 LIBS += $$PWD/VoiceControl/lib/libkenlm.so
 LIBS += $$PWD/VoiceControl/lib/libstt.so
 
-unix:!macx: LIBS += -L$$PWD/VoicceControl/lib/ -lportaudio -lpulse-simple -lpulse -lstt
+unix:!macx: LIBS += -L$$PWD/VoicceControl/lib/ -lportaudio -lpulse-simple -lpulse -lstt -lpigpio -lrt
 
 INCLUDEPATH += $$PWD/VoiceControl/lib
 DEPENDPATH += $$PWD/VoiceControl/lib

@@ -31,6 +31,16 @@ MainWindow::MainWindow(QWidget *parent)
     char pname[]="/dev/ttyUSB1";
     ulm3_samples = new ULM3Samples(pname);
     ulm3_samples->start();
+
+    if (gpioInitialise() < 0)
+        exit(-2);
+    Set_Pwm();
+    decR = new re_decoder(16, 12, callbackR);
+    decL = new re_decoder(20, 21, callbackL);
+
+    //Periodically calling timercallback to change the motion status and keep speed-loop.
+    gpioSetTimerFunc(0, 54, timercallback);
+
     lidar = *sl::createLidarDriver();
     if (!lidar) {
         std::cerr << "Insufficent memory, exit" << std::endl;
@@ -292,6 +302,12 @@ MainWindow::~MainWindow() {
 //        delete ulm3_samples;
 //        ulm3_samples = nullptr;cc
 //    }
+
+    gpioSetTimerFunc(0, 0, nullptr);
+    clearALL();
+    decL->re_cancel();
+    decR->re_cancel();
+    gpioTerminate();
 
     if (lidar) {
         delete lidar;

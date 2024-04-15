@@ -11,6 +11,8 @@
 #include "ulm3_acquisition_callback.h"
 #include "ulm3_pdoa_comm.h"
 
+#include "movecontrol/movecontrol.h"
+
 typedef struct output_data {
     double x;
     double y;
