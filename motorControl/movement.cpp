@@ -3,6 +3,7 @@
 #include "pwm.hpp"
 #include "motorDriver.hpp"
 #include "movement.hpp"
+#include "../movecontrol/movecontrol.h"
 /*
 
 TO BUILD
@@ -19,7 +20,6 @@ sudo ./rot_enc_c
 volatile int countL=0, countR=0 ;
 static int vL_current=0,vR_current=0,target_count=0, a = 1; 
 static int b = 0;
-std::condition_variable ready;//complete sign
 void callbackL(int wayL)
 {
    countL += wayL;
@@ -51,7 +51,7 @@ static void timercallback(void){
    gpioPWM(27, 0);
    gpioPWM(22, 0); 
    target_count = 0;
-   ready.notify_one();// Set the sign of work completed
+   MoveControll.getInstance().sem.signal();// Set the sign of work completed
    }
    else if(mode == 1)//go straight
    {
@@ -76,6 +76,7 @@ static void timercallback(void){
    
    countL = countR = 0;
 }
+
 int main(int argc, char *argv[])
 {
    if (gpioInitialise() < 0) return 1;
