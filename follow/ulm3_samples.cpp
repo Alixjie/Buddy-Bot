@@ -119,7 +119,7 @@ control_param ULM3Samples::getControl()
     result.degree = (int)result.degree;
 
     if (result.distance < 30) {
-        result.distance = 10;
+        result.distance = 0;
     }
     if (result.degree < 15 && result.degree > 0) {
         result.degree = 15;
@@ -136,6 +136,9 @@ void ULM3Samples::controlCar()
     while (true) {
         control_param current_control = getControl();
         std::cout << current_control.distance << ",1 , " << current_control.degree << std::endl;
+        if (current_control.distance==0) {
+            continue;
+        }
         mc.SetFromAngel(current_control.degree);
         mc.sem.wait();
         mc.SetFromDistance(current_control.distance);

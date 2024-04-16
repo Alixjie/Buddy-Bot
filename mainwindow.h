@@ -88,5 +88,7 @@ private:
     int timer_id_obstacle_avoidance;
 
     int system_status;
+
+    double mult;
 };
 #endif // MAINWINDOW_H

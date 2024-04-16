@@ -40,7 +40,7 @@ void ULM3AcquisitionCallback::hasSample(const simple_string &uwb_string)
     } else {
         param.speed = 1;
     }
-    param.distance = current_data_.distance_cm;
+    param.distance = current_data_.distance_cm + 40;
     param.degree = current_data_.aoa_deg;
 
     // struct timespec begin, end;

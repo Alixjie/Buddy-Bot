@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
     //Periodically calling timercallback to change the motion status and keep speed-loop.
     gpioSetTimerFunc(0, 54, timercallback);
 
+    mult = 0.5;
     lidar = *sl::createLidarDriver();
     if (!lidar) {
         std::cerr << "Insufficent memory, exit" << std::endl;
@@ -147,12 +148,12 @@ void MainWindow::paintEvent(QPaintEvent *event) {
                 if (((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) &&
                     (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 110.f) ||
                      ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 250.f))) {
-                    double x = origin_point.x() +
+                    double x = origin_point.x() + mult * (
                                (nodes[num].dist_mm_q2 / 4.0f) *
-                               sin((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
-                    double y = origin_point.y() -
+                               sin((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180));
+                    double y = origin_point.y() - mult * (
                                (nodes[num].dist_mm_q2 / 4.0f) *
-                               cos((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
+                               cos((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180));
 
 //                    std::cout << "Point x y : " << x << ", " << y << " " << (nodes[num].angle_z_q14 * 90.f / 16384.f) << " ";
                     painter.drawPoint(QPoint(int(x), int(y)));
@@ -323,10 +324,10 @@ MainWindow::~MainWindow() {
     delay(20);
     lidar->setMotorSpeed(0);
 
-//    if(ulm3_samples){
-//        delete ulm3_samples;
-//        ulm3_samples = nullptr;cc
-//    }
+    if(ulm3_samples){
+        delete ulm3_samples;
+        ulm3_samples = nullptr;
+    }
 
     gpioSetTimerFunc(0, 0, nullptr);
     clearALL();
