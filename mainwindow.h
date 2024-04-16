@@ -65,6 +65,8 @@ public slots:
 
     void car_control_main();
 
+    void car_control_stop();
+
     void car_come_here();
 
 private:
