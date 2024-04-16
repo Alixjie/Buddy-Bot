@@ -28,7 +28,7 @@ void MoveControll::Stop() {
 int MoveControll::SetFromOperation(Operation operation) {
     switch (operation) {
         case Operation::COME:
-        // TO DO
+            mainWindow->car_come_here();
             break;
         case Operation::LEFT:
             SetFromAngel(-90);
@@ -40,7 +40,7 @@ int MoveControll::SetFromOperation(Operation operation) {
             Stop();
             break;
         case Operation::FOLLOW:
-        // TO DO
+            mainWindow->ulm3_samples->controlCar();
             break;
         case Operation::GO:
             SetFromDistance(100);

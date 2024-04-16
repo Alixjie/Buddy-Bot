@@ -18,6 +18,7 @@
 #include "motorControl/encoder.hpp"
 #include "motorControl/pwm.hpp"
 #include "motorControl/motorDriver.hpp"
+#include "voicecontrol/voicecontrol.h"
 
 #define lidar_scan 1
 #define obstacle_avoidance 2
@@ -58,7 +59,9 @@ public slots:
 
     void end_obstacle_avoidance();
 
-    void voice_control_main();
+    void voice_control_start();
+
+    void voice_control_stop();
 
     void car_control_main();
 
@@ -71,6 +74,8 @@ private:
 
     ULM3Samples* ulm3_samples;
     output_data uwb_loc;
+
+    VoiceControl vc;
 
     sl_lidar_response_measurement_node_hq_t nodes[8192];
     size_t count;

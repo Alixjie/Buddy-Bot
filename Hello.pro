@@ -37,7 +37,8 @@ SOURCES += \
     sl_serial_channel.cpp \
     sl_tcp_channel.cpp \
     sl_udp_channel.cpp \
-    utils/semaphore.cpp
+    utils/semaphore.cpp \
+    voicecontrol/voicecontrol.cpp
 
 HEADERS += \
     AStar.h \
@@ -89,7 +90,8 @@ HEADERS += \
     sl_lidar_protocol.h \
     sl_lidarprotocol_codec.h \
     sl_types.h \
-    utils/semaphore.h
+    utils/semaphore.h \
+    voicecontrol/voicecontrol.h
 
 FORMS += \
     mainwindow.ui

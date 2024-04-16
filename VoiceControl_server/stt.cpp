@@ -80,7 +80,7 @@ void set_defaults(Settings* settings) {
 
   settings->source = const_cast<char*>("mic");
   //settings->models_dir = "/home/group3/models/";
-  settings->models_dir = "/home/cc/work/code/Buddy-Bot/VoiceControl/model/";
+  settings->models_dir = "/home/cc/work/code/Buddy-Bot/VoiceControl_server/model/";
   std::string mode_dir = std::string(settings->models_dir) + "mode";
   settings->mode = read_mode_from_file(mode_dir);
   if (settings->mode == 0) {
@@ -290,6 +290,17 @@ void handle_Operation(Operation operation) {
     }
 
     *send_operation = operation;
+
+        
+    int sem_value;
+    do {
+        sem_getvalue(sem, &sem_value);
+        if (sem_value > 0) {
+            sem_trywait(sem);
+        }
+    } while (sem_value > 0);
+
+    
     sem_post(sem);
 
     lastOperation = operation;
