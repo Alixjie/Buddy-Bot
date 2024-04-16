@@ -7,11 +7,10 @@
 #include <mutex>
 #include <thread>
 
+#include "movecontrol/movecontrol.h"
 #include "sync_queue.h"
 #include "ulm3_acquisition_callback.h"
 #include "ulm3_pdoa_comm.h"
-
-#include "movecontrol/movecontrol.h"
 
 typedef struct output_data {
     double x;
@@ -22,21 +21,19 @@ class ULM3Samples {
 public:
     ULM3Samples(const char* pname);
     // ULM3Samples();
-    //~ULM3Samples();
+    ~ULM3Samples();
     void start();
     output_data getData();
-    control_param getControl();
-    void controlCar();
 
     /*void registerControl(void (*distanceControl)(int),
                          void (*degreeControl)(int));*/
-    // void startFollow();
-    // void stopFollow();
+    void startFollow();
+    void stopFollow();
 
 private:
     bool isFirst_;
     // std::mutex mutex_;
-    // int following_;
+    int following_;
     // std::thread followThread;
     // KalmanFilter filter_;
     static constexpr char default_name[] = "/dev/ttyUSB1";
@@ -44,6 +41,8 @@ private:
     ULM3PDOAComm ulm3_pdoa_comm_;
     ULM3AcquisitionCallback ulm3_acquisition_callback_;
 
+    void controlCar();
+    control_param getControl();
     // void (*distanceControl_)(int);
     // void (*degreeControl_)(int);
 

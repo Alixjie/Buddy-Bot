@@ -119,7 +119,7 @@ control_param ULM3Samples::getControl()
     result.degree = (int)result.degree;
 
     if (result.distance < 30) {
-        result.distance = 10;
+        result.distance = 0;
     }
     if (result.degree < 15 && result.degree > 0) {
         result.degree = 15;
@@ -133,9 +133,10 @@ control_param ULM3Samples::getControl()
 void ULM3Samples::controlCar()
 {
     MoveControll& mc = MoveControll::getInstance();
-    while (true) {
+    while (following_) {
         control_param current_control = getControl();
-        std::cout << current_control.distance << ",1 , " << current_control.degree << std::endl;
+        std::cout << current_control.distance << ",1 , "
+                  << current_control.degree << std::endl;
         mc.SetFromAngel(current_control.degree);
         mc.sem.wait();
         mc.SetFromDistance(current_control.distance);
@@ -169,28 +170,17 @@ void ULM3Samples::controlCar()
 {
     distanceControl_ = distanceControl;
     degreeControl_ = degreeControl;
-}
+}*/
 
+// Control start and stop by other thread.
 void ULM3Samples::startFollow()
 {
-    if (following_) return;
-
-    following_ = 1;
-
-    followThread = std::thread(&ULM3Samples::run_follow, this);
+    if (!following_) {
+        following_ = 1;
+        controlCar();
+    }
 }
 
-void ULM3Samples::stopFollow()
-{
-    if (!following_) return;
+void ULM3Samples::stopFollow() { following_ = 0; }
 
-    following_ = 0;
-    followThread.join();
-}*/
-
-/*ULM3Samples::~ULM3Samples()
-{
-    stopFollow();
-    distanceControl_ = nullptr;
-    degreeControl_ = nullptr;
-}*/
+ULM3Samples::~ULM3Samples() { stopFollow(); }
