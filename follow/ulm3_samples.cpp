@@ -118,7 +118,7 @@ control_param ULM3Samples::getControl()
     result.distance = (int)result.distance;
     result.degree = (int)result.degree;
 
-    if (result.distance < 30) {
+    if (result.distance < 45) {
         result.distance = 0;
     }
     if (result.degree < 15 && result.degree > 0) {
