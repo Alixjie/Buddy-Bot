@@ -10,10 +10,6 @@ CONFIG += c++11
 
 SOURCES += \
     AStar.cpp \
-    VoiceControl/audio/audio_buffer.c \
-    VoiceControl/audio/pa_list_devices.c \
-    VoiceControl/audio/wav_io.c \
-    VoiceControl/stt.cpp \
     arch/linux/net_serial.cpp \
     arch/linux/net_socket.cpp \
     arch/linux/timer.cpp \
@@ -45,11 +41,6 @@ SOURCES += \
 
 HEADERS += \
     AStar.h \
-    VoiceControl/audio/audio_buffer.h \
-    VoiceControl/audio/pa_list_devices.h \
-    VoiceControl/audio/wav_io.h \
-    VoiceControl/coqui-stt.h \
-    VoiceControl/stt.h \
     arch/linux/arch_linux.h \
     arch/linux/net_serial.h \
     arch/linux/thread.hpp \
@@ -108,10 +99,5 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-LIBS += $$PWD/VoiceControl/lib/libkenlm.so
-LIBS += $$PWD/VoiceControl/lib/libstt.so
+unix:!macx: LIBS += -lpigpio -lrt
 
-unix:!macx: LIBS += -L$$PWD/VoicceControl/lib/ -lportaudio -lpulse-simple -lpulse -lstt -lpigpio -lrt
-
-INCLUDEPATH += $$PWD/VoiceControl/lib
-DEPENDPATH += $$PWD/VoiceControl/lib

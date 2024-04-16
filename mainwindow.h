@@ -14,7 +14,6 @@
 #include "sl_lidar.h"
 #include "AStar.h"
 #include "follow/ulm3_samples.h"
-#include "VoiceControl/stt.h"
 #include "motorControl/movement.hpp"
 #include "motorControl/encoder.hpp"
 #include "motorControl/pwm.hpp"
