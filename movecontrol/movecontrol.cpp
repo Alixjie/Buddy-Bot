@@ -40,7 +40,7 @@ int MoveControll::SetFromOperation(Operation operation) {
             Stop();
             break;
         case Operation::FOLLOW:
-            mainWindow->ulm3_samples->controlCar();
+            mainWindow->ulm3_samples->startFollow();
             break;
         case Operation::GO:
             SetFromDistance(100);

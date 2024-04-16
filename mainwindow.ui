@@ -70,9 +70,16 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="follow_me">
+      <widget class="QPushButton" name="start_follow">
        <property name="text">
         <string>Follow Me</string>
+       </property>
+      </widget>
+     </item>
+      <item>
+      <widget class="QPushButton" name="stop_follow">
+       <property name="text">
+        <string>Stop Follow</string>
        </property>
       </widget>
      </item>
