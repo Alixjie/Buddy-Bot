@@ -43,12 +43,15 @@ void ULM3AcquisitionCallback::hasSample(const simple_string &uwb_string)
     param.distance = current_data_.distance_cm + 40;
     param.degree = current_data_.aoa_deg;
 
+    // param.distance = std::sqrt(param.distance * param.distance - 126 * 126);
+
     // struct timespec begin, end;
 
     // clock_gettime(CLOCK_REALTIME, &begin);
 
     if (!sync_queue_->push(param, 500)) {
         sync_queue_->clear();
+        sync_queue_->push(param);
     }
 
     // clock_gettime(CLOCK_REALTIME, &end);
