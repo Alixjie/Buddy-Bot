@@ -15,7 +15,18 @@
 #include "coqui-stt.h"
 
 
-#include "movecontrol/movecontrol.h"
+
+enum class Operation {
+    COME,
+    LEFT,
+    RIGHT,
+    STOP,
+    FOLLOW,
+    GO,
+    NONE  //no operation
+};
+
+
 
 typedef struct SettingsStruct {
     char* source;
