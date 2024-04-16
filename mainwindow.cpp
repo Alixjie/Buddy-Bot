@@ -26,7 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->quit_program, &QPushButton::clicked, this, &QApplication::quit);
 
-    connect(ui->voice_control, &QPushButton::clicked, this, &MainWindow::voice_control_main);
+    connect(ui->voice_control_start, &QPushButton::clicked, this, &MainWindow::voice_control_start);
+    concect(ui->voice_control_stop, &QPushButton::clicked, this, &MainWindow::voice_control_stop);
     connect(ui->follow_me, &QPushButton::clicked, this, &MainWindow::car_control_main);
 
     char pname[]="/dev/ttyUSB1";
@@ -42,6 +43,16 @@ MainWindow::MainWindow(QWidget *parent)
     //Periodically calling timercallback to change the motion status and keep speed-loop.
     gpioSetTimerFunc(0, 54, timercallback);
 
+<<<<<<< HEAD
+    mult = 0.5;
+=======
+
+    MoveControll& mc = MoveControll::getInstance();
+    mc.setMainWindow(this);
+    //set voice control
+    VoiceControl vc;
+
+>>>>>>> 35b8544334dbcb56db1d455fcb73bf7cb83651d3
     lidar = *sl::createLidarDriver();
     if (!lidar) {
         std::cerr << "Insufficent memory, exit" << std::endl;
@@ -147,12 +158,12 @@ void MainWindow::paintEvent(QPaintEvent *event) {
                 if (((nodes[num].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT) != 0) &&
                     (((nodes[num].angle_z_q14 * 90.f / 16384.f) <= 110.f) ||
                      ((nodes[num].angle_z_q14 * 90.f / 16384.f) >= 250.f))) {
-                    double x = origin_point.x() +
+                    double x = origin_point.x() + mult * (
                                (nodes[num].dist_mm_q2 / 4.0f) *
-                               sin((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
-                    double y = origin_point.y() -
+                               sin((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180));
+                    double y = origin_point.y() - mult * (
                                (nodes[num].dist_mm_q2 / 4.0f) *
-                               cos((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180);
+                               cos((nodes[num].angle_z_q14 * 90.f / 16384.f) * 3.14 / 180));
 
 //                    std::cout << "Point x y : " << x << ", " << y << " " << (nodes[num].angle_z_q14 * 90.f / 16384.f) << " ";
                     painter.drawPoint(QPoint(int(x), int(y)));
@@ -289,9 +300,14 @@ void MainWindow::end_obstacle_avoidance() {
     killTimer(timer_id_obstacle_avoidance);
 }
 
-void MainWindow::voice_control_main()
+void MainWindow::voice_control_start()
 {
-    voice_control();
+    vc.voicecontrol_start();
+}
+
+void MainWindow::voice_control_stop()
+{
+    vc.voicecontrol_stop();
 }
 
 void MainWindow::car_control_main()
@@ -323,10 +339,10 @@ MainWindow::~MainWindow() {
     delay(20);
     lidar->setMotorSpeed(0);
 
-//    if(ulm3_samples){
-//        delete ulm3_samples;
-//        ulm3_samples = nullptr;cc
-//    }
+    if(ulm3_samples){
+        delete ulm3_samples;
+        ulm3_samples = nullptr;
+    }
 
     gpioSetTimerFunc(0, 0, nullptr);
     clearALL();

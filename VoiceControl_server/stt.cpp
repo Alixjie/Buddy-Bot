@@ -17,8 +17,6 @@
 #include <vector>
 #include <iterator>
 #include <cstring>
-
-#include <QTime>
 #include <iostream>
 
 #include <pulse/simple.h>
@@ -27,9 +25,24 @@
 #include "coqui-stt.h"
 
 extern "C" {
-#include "VoiceControl/audio/audio_buffer.h"
-#include "VoiceControl/audio/wav_io.h"
+#include "audio/audio_buffer.h"
+#include "audio/wav_io.h"
 }
+
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <semaphore.h>
+#include <unistd.h>
+#include <chrono>
+
+
+
+#define SHM_NAME "/shm_vc"
+#define SEM_NAME "/sem_vc"
+
+static Operation* send_operation;
+static sem_t* sem;
 
 
 /*
@@ -66,8 +79,8 @@ int read_mode_from_file(const std::string& mode_dir) {
 void set_defaults(Settings* settings) {
 
   settings->source = const_cast<char*>("mic");
-  settings->models_dir = "/home/group3/models/";
-  //settings->models_dir = "/home/cc/work/code/Buddy-Bot/VocieControl/model/";
+  //settings->models_dir = "/home/group3/models/";
+  settings->models_dir = "/home/cc/work/code/Buddy-Bot/VoiceControl_server/model/";
   std::string mode_dir = std::string(settings->models_dir) + "mode";
   settings->mode = read_mode_from_file(mode_dir);
   if (settings->mode == 0) {
@@ -259,19 +272,40 @@ static Operation output_streaming_transcript(const Metadata* current_metadata,
 void handle_Operation(Operation operation) {
 
     static Operation lastOperation;
-    static QTime lastOperationTime = QTime::currentTime();
+    static auto lastOperationTime = std::chrono::steady_clock::now();
+    static auto lastModificationTime = std::chrono::steady_clock::now();
 
     if (operation == lastOperation) {
-        int elapsedSeconds = lastOperationTime.secsTo(QTime::currentTime());
+        auto now = std::chrono::steady_clock::now();
+        auto elapsedSeconds = std::chrono::duration_cast<std::chrono::seconds>(now - lastOperationTime).count();
         if (elapsedSeconds < 2) {
             return;
         }
     }
 
-    MoveControll::getInstance().SetFromOperation(operation);
+    auto now = std::chrono::steady_clock::now();
+    auto elapsedSeconds = std::chrono::duration_cast<std::chrono::seconds>(now - lastModificationTime).count();
+    if (elapsedSeconds < 1) {
+        return;
+    }
+
+    *send_operation = operation;
+
+        
+    int sem_value;
+    do {
+        sem_getvalue(sem, &sem_value);
+        if (sem_value > 0) {
+            sem_trywait(sem);
+        }
+    } while (sem_value > 0);
+
+    
+    sem_post(sem);
 
     lastOperation = operation;
-    lastOperationTime = QTime::currentTime();
+    lastOperationTime = std::chrono::steady_clock::now();
+    lastModificationTime = std::chrono::steady_clock::now();
 }
 
 //This function is adapted from the sochcat example code
@@ -382,4 +416,28 @@ int voice_control() {
 
     return 0;
 }
+
+
+int main() {
+
+
+    // Create shared memory
+    int shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666);
+    ftruncate(shm_fd, sizeof(Operation));
+    send_operation = (Operation*)mmap(0, sizeof(Operation), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+
+    sem = sem_open(SEM_NAME, O_CREAT, 0666, 0);
+
+
+
+    voice_control();
+
+    munmap(send_operation, sizeof(int));
+    close(shm_fd);
+    shm_unlink(SHM_NAME);
+    sem_close(sem);
+    sem_unlink(SEM_NAME);
+
+    return 0;
+}  
 
