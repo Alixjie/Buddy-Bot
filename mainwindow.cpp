@@ -26,7 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->quit_program, &QPushButton::clicked, this, &QApplication::quit);
 
-    connect(ui->voice_control, &QPushButton::clicked, this, &MainWindow::voice_control_main);
+    connect(ui->voice_control_start, &QPushButton::clicked, this, &MainWindow::voice_control_start);
+    concect(ui->voice_control_stop, &QPushButton::clicked, this, &MainWindow::voice_control_stop);
     connect(ui->follow_me, &QPushButton::clicked, this, &MainWindow::car_control_main);
 
     char pname[]="/dev/ttyUSB1";
@@ -42,7 +43,16 @@ MainWindow::MainWindow(QWidget *parent)
     //Periodically calling timercallback to change the motion status and keep speed-loop.
     gpioSetTimerFunc(0, 54, timercallback);
 
+<<<<<<< HEAD
     mult = 0.5;
+=======
+
+    MoveControll& mc = MoveControll::getInstance();
+    mc.setMainWindow(this);
+    //set voice control
+    VoiceControl vc;
+
+>>>>>>> 35b8544334dbcb56db1d455fcb73bf7cb83651d3
     lidar = *sl::createLidarDriver();
     if (!lidar) {
         std::cerr << "Insufficent memory, exit" << std::endl;
@@ -290,9 +300,14 @@ void MainWindow::end_obstacle_avoidance() {
     killTimer(timer_id_obstacle_avoidance);
 }
 
-void MainWindow::voice_control_main()
+void MainWindow::voice_control_start()
 {
-    voice_control();
+    vc.voicecontrol_start();
+}
+
+void MainWindow::voice_control_stop()
+{
+    vc.voicecontrol_stop();
 }
 
 void MainWindow::car_control_main()

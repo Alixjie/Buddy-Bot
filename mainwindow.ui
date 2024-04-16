@@ -56,9 +56,16 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="voice_control">
+      <widget class="QPushButton" name="voice_control_start">
        <property name="text">
-        <string>Voice Control</string>
+        <string>Start Voice Control</string>
+       </property>
+      </widget>
+     </item>
+    <item>
+      <widget class="QPushButton" name="voice_control_stop">
+       <property name="text">
+        <string>Stop Voice Control</string>
        </property>
       </widget>
      </item>
