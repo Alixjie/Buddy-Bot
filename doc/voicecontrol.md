@@ -25,7 +25,7 @@ Due to performance and real-time considerations, this project is designed to rec
 - **Speed:** The general model processes very slowly, so a smaller model trained with a limited amount of developer data is used to achieve faster performance.
 - **Accuracy:** While the recognition speed is high, the accuracy for keyword detection is moderately reliable.
 
-## **Challenges:** 
+## Challenges
 
 - The main disadvantages are the recognition limited to specific voices and severe susceptibility to noise interference.
 
