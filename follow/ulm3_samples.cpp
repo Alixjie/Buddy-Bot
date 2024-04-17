@@ -23,7 +23,6 @@
         0, pow(delta_t, 4) * sigma_ay / 4, 0, pow(delta_t, 3) * sigma_ax / 2,
         pow(delta_t, 3) * sigma_ax / 2, 0, pow(delta_t, 2) * sigma_ax, 0, 0,
         pow(delta_t, 3) * sigma_ay / 2, 0, pow(delta_t, 2) * sigma_ay;
-
     x << 0, 0, 0, 0;
 
     KalmanFilter filter(x, P, A, H, R, Q);
@@ -38,14 +37,15 @@ ULM3Samples::ULM3Samples(const char* pname)
       ulm3_acquisition_callback_(&sync_queue_)
 {
     isFirst_ = true;
-    // following_ = 0;
+    following_ = 0;
 }
 
 ULM3Samples::ULM3Samples()
     : sync_queue_(5),
-      ulm3_pdoa_comm_(default_name),
+      ulm3_pdoa_comm_("/dev/ttyUSB1"),
       ulm3_acquisition_callback_(&sync_queue_)
 {
+    following_ = 0;
     isFirst_ = true;
 }
 
@@ -132,8 +132,10 @@ control_param ULM3Samples::getControl()
     result.distance = (int)result.distance;
     result.degree = -(int)result.degree;
 
-    if (result.distance < 20) {
+    if (result.distance < 30) {
         result.distance = 0;
+    } else {
+        result.distance -= 30;
     }
     if (result.degree < 15 && result.degree > -15) {
         result.degree = 0;
@@ -196,6 +198,8 @@ void ULM3Samples::run_follow()
 // Control start and stop by other thread.
 void ULM3Samples::startFollow()
 {
+
+
     if (!following_) {
         following_ = 1;
         followThread_ = std::thread(&ULM3Samples::run_follow, this);

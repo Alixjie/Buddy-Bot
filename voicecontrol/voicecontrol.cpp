@@ -56,6 +56,7 @@ void VoiceControl::voicecontrol_run() {
   while (!vcstopFlag.load()) {
     sem_wait(sem);
     op = *recv_operation;
+     printf("operation:%d\n", (int)op);
     if (op == Operation::STOP) {
       // come_stop_flag = true;
       // follow_stop_flag = true;
@@ -67,7 +68,6 @@ void VoiceControl::voicecontrol_run() {
                             // follow is running
         continue;
       } else {
-        printf("operation:%d\n", (int)op);
         MoveControll::getInstance().SetFromOperation(op);
         if (op == Operation::FOLLOW) {
           iscomeorfollow = true; // nedd to fix

@@ -288,7 +288,7 @@ void handle_Operation(Operation operation) {
     if (elapsedSeconds < 1) {
         return;
     }
-
+    std::cout <<"operation"<<(int)operation<<std::endl;
     *send_operation = operation;
 
 

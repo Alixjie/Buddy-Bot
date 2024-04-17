@@ -40,8 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::car_control_stop);
   connect(ui->come_to_user, &QPushButton::clicked, this,
           &MainWindow::car_come_here);
-  ULM3Samples &ulm3_samples = ULM3Samples::getInstance();
-  ulm3_samples.start();
+  ULM3Samples::getInstance().start();
 
   if (gpioInitialise() < 0)
     exit(-2);
@@ -225,7 +224,7 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 }
 
 int MainWindow::get_uwb_point_info() {
-  uwb_loc = ulm3_samples.getData();
+  uwb_loc = ULM3Samples::getInstance().getData();
   uwb_label_position = QPoint(500 + uwb_loc.x * 6, 700 - uwb_loc.y * 6);
   std::cout << uwb_label_position.x() << ',' << uwb_label_position.y()
             << std::endl;
@@ -336,9 +335,9 @@ void MainWindow::voice_control_start() { vc.voicecontrol_start(); }
 
 void MainWindow::voice_control_stop() { vc.voicecontrol_stop(); }
 
-void MainWindow::car_control_main() { ulm3_samples.startFollow(); }
+void MainWindow::car_control_main() { ULM3Samples::getInstance().startFollow(); }
 
-void MainWindow::car_control_stop() { ulm3_samples.stopFollow(); }
+void MainWindow::car_control_stop() { ULM3Samples::getInstance().stopFollow(); }
 
 void MainWindow::car_come_here() {
   MoveControll &mc = MoveControll::getInstance();
