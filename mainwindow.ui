@@ -83,6 +83,13 @@
        </property>
       </widget>
      </item>
+      <item>
+      <widget class="QPushButton" name="come_to_user">
+       <property name="text">
+        <string>Come to user</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>

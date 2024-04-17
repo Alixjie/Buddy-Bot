@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->voice_control_stop, &QPushButton::clicked, this, &MainWindow::voice_control_stop);
     connect(ui->start_follow, &QPushButton::clicked, this, &MainWindow::car_control_main);
     connect(ui->stop_follow, &QPushButton::clicked, this, &MainWindow::car_control_stop);
-
+    connect(ui->come_to_user, &QPushButton::clicked, this, &MainWindow::car_come_here);
     char pname[]="/dev/ttyUSB1";
     ulm3_samples = new ULM3Samples(pname);
     ulm3_samples->start();

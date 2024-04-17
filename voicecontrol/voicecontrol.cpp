@@ -26,8 +26,10 @@ int VoiceControl::stopserver(){
 
 int VoiceControl::voicecontrol_start(){
 
+    if (vcstopFlag.load()) {
         vcstopFlag.store(false);
         voiceThread = std::thread(&VoiceControl::voicecontrol_run, this);
+    }
     return 0;
 }
 
@@ -85,6 +87,7 @@ void VoiceControl::voicecontrol_run(){
 }
 
 int VoiceControl::voicecontrol_stop(){
+    if (vcstopFlag.load()) { return 0; }
     vcstopFlag.store(true);
     voiceThread.join();
     //stopserver();

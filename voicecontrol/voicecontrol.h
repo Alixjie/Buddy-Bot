@@ -13,7 +13,7 @@ class VoiceControl : public QObject {
     Q_OBJECT
 
 public:
-    VoiceControl() : vcstopFlag(false), server(new QProcess(this)) {}
+    VoiceControl() : vcstopFlag(true), server(new QProcess(this)) {}
 
 public slots:
     int voicecontrol_start();

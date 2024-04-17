@@ -190,6 +190,7 @@ void ULM3Samples::startFollow()
 
 void ULM3Samples::stopFollow()
 {
+    if (!following_) { return; }
     following_ = 0;
     followThread_.join();
 }
