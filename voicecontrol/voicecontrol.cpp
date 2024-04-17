@@ -45,18 +45,13 @@ int VoiceControl::voicecontrol_start(){
         return -1;
     }
     */
-    Operation op = *recv_operation;
-
+    Operation op;
     while (!vcstopFlag.load()) {
-        int sem_vaule;
-        sem_getvalue(sem,&sem_vaule);
-        printf("sem_vaule=%d\n",sem_vaule);
         sem_wait(sem);
-
+        op = *recv_operation;
         if(op == Operation::STOP){
             //come_stop_flag = true;
             //follow_stop_flag = true;
-            printf("ccstop\n");
             MoveControll::getInstance().Stop();
             iscomeorfollow = false;
         }
