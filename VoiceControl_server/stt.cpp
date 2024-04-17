@@ -283,16 +283,17 @@ void handle_Operation(Operation operation) {
         }
     }
 
-    auto now = std::chrono::steady_clock::now();
-    auto elapsedSeconds = std::chrono::duration_cast<std::chrono::seconds>(now - lastModificationTime).count();
-    if (elapsedSeconds < 1) {
-        return;
+    if (operation != Operation::STOP && operation != Operation::FOLLOW) {
+        auto now = std::chrono::steady_clock::now();
+        auto elapsedSeconds = std::chrono::duration_cast<std::chrono::seconds>(now - lastModificationTime).count();
+        if (elapsedSeconds < 1) {
+            return;
+        }
     }
+
     std::cout <<"operation"<<(int)operation<<std::endl;
     *send_operation = operation;
 
-
-        
     int sem_value;
     do {
         sem_getvalue(sem, &sem_value);
@@ -301,7 +302,6 @@ void handle_Operation(Operation operation) {
         }
     } while (sem_value > 0);
 
-    
     sem_post(sem);
 
     lastOperation = operation;

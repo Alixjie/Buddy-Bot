@@ -34,6 +34,7 @@ int MoveControll::SetFromOperation(Operation operation) {
     Stop();
     break;
   case Operation::FOLLOW:
+    Stop();
     // mainWindow->ulm3_samples->startFollow();
     ULM3Samples::getInstance().startFollow();
     break;
