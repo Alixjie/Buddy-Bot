@@ -1,73 +1,67 @@
 // movecontrol.cpp
 #include "movecontrol.h"
-#include <stdlib.h>
 #include <iostream>
-//#include "mainwindow.h"
+#include <stdlib.h>
+// #include "mainwindow.h"
 
-
-MoveControll& MoveControll::getInstance() {
-    static MoveControll instance;
-    return instance;
+MoveControll &MoveControll::getInstance() {
+  static MoveControll instance;
+  return instance;
 }
 
-
-void MoveControll::SetMoveState(int movestate , int Distance, int anlge) {
-    std::lock_guard<std::mutex> lock(m_mutex);
-    setMovestate(movestate);
-    setDistance(Distance);
-    setAngle(anlge);
-    std::cout << movestate << Distance << angle <<std::endl;
+void MoveControll::SetMoveState(int movestate, int Distance, int anlge) {
+  std::lock_guard<std::mutex> lock(m_mutex);
+  setMovestate(movestate);
+  setDistance(Distance);
+  setAngle(anlge);
+  std::cout << movestate << Distance << angle << std::endl;
 }
 
-
-void MoveControll::Stop() {
-    SetMoveState(0, 0, 0);
-}
-
+void MoveControll::Stop() { SetMoveState(0, 0, 0); }
 
 int MoveControll::SetFromOperation(Operation operation) {
-    switch (operation) {
-        case Operation::COME:
-           // mainWindow->car_come_here();
-            break;
-        case Operation::LEFT:
-            SetFromAngel(-90);
-            break;
-        case Operation::RIGHT:
-            SetFromAngel(90);
-            break;
-        case Operation::STOP:
-            Stop();
-            break;
-        case Operation::FOLLOW:
-            //mainWindow->ulm3_samples->startFollow();
-            break;
-        case Operation::GO:
-            SetFromDistance(30);
-            break;
+  switch (operation) {
+  case Operation::COME:
+    // mainWindow->car_come_here();
+    break;
+  case Operation::LEFT:
+    SetFromAngel(-90);
+    break;
+  case Operation::RIGHT:
+    SetFromAngel(90);
+    break;
+  case Operation::STOP:
+    Stop();
+    break;
+  case Operation::FOLLOW:
+    // mainWindow->ulm3_samples->startFollow();
+    ULM3Samples::getInstance().startFollow();
+    break;
+  case Operation::GO:
+    SetFromDistance(30);
+    break;
 
-        default:
-            return -1;  // Invalid operation
-    }
-    return 0;  // Success
+  default:
+    return -1; // Invalid operation
+  }
+  return 0; // Success
 }
 
-//wheelDistance = angle*10/3 + 0.004 angle*angle
-//abs angle should between 15 and 90, if not, the result will be not accurate
+// wheelDistance = angle*10/3 + 0.004 angle*angle
+// abs angle should between 15 and 90, if not, the result will be not accurate
 int MoveControll::SetFromAngel(int angle) {
-    if (angle < -90 || angle > 90) {
-        return -1;  // Invalid angle
-    }
-        SetMoveState(2, 0, angle);
-    return 0;  // Success
+  if (angle < -90 || angle > 90) {
+    return -1; // Invalid angle
+  }
+  SetMoveState(2, 0, angle);
+  return 0; // Success
 }
 
-//distance is in cm,1cm = 18 wheelDistance, should be larger than 10cm
+// distance is in cm,1cm = 18 wheelDistance, should be larger than 10cm
 int MoveControll::SetFromDistance(int distance) {
-    if (distance < 0) {
-        return -1;  // Invalid distance
-    }
-    SetMoveState(1, distance, 0);
-    return 0;  // Success
+  if (distance < 0) {
+    return -1; // Invalid distance
+  }
+  SetMoveState(1, distance, 0);
+  return 0; // Success
 }
-
