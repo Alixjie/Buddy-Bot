@@ -41,10 +41,17 @@ ULM3Samples::ULM3Samples(const char* pname)
     // following_ = 0;
 }
 
+ULM3Samples::ULM3Samples()
+    : sync_queue_(5),
+      ulm3_pdoa_comm_(default_name),
+      ulm3_acquisition_callback_(&sync_queue_)
+{
+    isFirst_ = true;
+}
+
 ULM3Samples& ULM3Samples::getInstance()
 {
-    char pname[] = "/dev/ttyUSB1";
-    static ULM3Samples ulm3_instance_(pname);
+    static ULM3Samples ulm3_instance_;
     return ulm3_instance_;
 }
 

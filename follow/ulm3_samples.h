@@ -19,7 +19,7 @@ typedef struct output_data {
 
 class ULM3Samples {
 public:
-    // ULM3Samples();
+    ULM3Samples();
     static ULM3Samples& getInstance();
     ~ULM3Samples();
     void start();
