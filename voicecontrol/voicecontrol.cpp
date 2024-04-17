@@ -48,11 +48,15 @@ int VoiceControl::voicecontrol_start(){
     Operation op = *recv_operation;
 
     while (!vcstopFlag.load()) {
+        int sem_vaule;
+        sem_getvalue(sem,&sem_vaule);
+        printf("sem_vaule=%d\n",sem_vaule);
         sem_wait(sem);
 
         if(op == Operation::STOP){
             //come_stop_flag = true;
             //follow_stop_flag = true;
+            printf("ccstop\n");
             MoveControll::getInstance().Stop();
             iscomeorfollow = false;
         }
@@ -62,6 +66,7 @@ int VoiceControl::voicecontrol_start(){
             }
             else
             {
+                printf("operation:%d\n",(int)op);
                 MoveControll::getInstance().SetFromOperation(op);
                 if(op == Operation::COME || op == Operation::FOLLOW){
                     iscomeorfollow = false;//nedd to fix

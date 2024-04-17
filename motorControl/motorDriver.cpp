@@ -51,6 +51,19 @@ void Speed(int current_vL,int current_vR)
     direction(0);
     vL = VelocityL(60,current_vL); 
     vR = VelocityR(60,current_vR); 
+    if (vL > 100) {
+	    vL = 100;
+    } else if (vL < -100) {
+	    vL= -100;
+    }
+    
+    if (vR > 100) {
+	    vR = 100;
+    } else if (vR < -100) {
+	    vR = -100;
+    }
+
+    
    // std::cout<<vL<<", "<<vR<<std::endl;
     gpioPWM(27,vR);
     gpioPWM(22,vL);
@@ -72,6 +85,18 @@ void spinSpeed(int b, int current_vL,int current_vR)
     BIN(1);
     vL = 0;
     vR = VelocityR(50,abs(current_vR)); 
+    }
+
+    if (vL > 100) {
+	    vL = 100;
+    } else if (vL < -100) {
+	    vL= -100;
+    }
+    
+    if (vR > 100) {
+	    vR = 100;
+    } else if (vR < -100) {
+	    vR = -100;
     }
 //    std::cout<<vL<<", "<<vR<<std::endl;
     gpioPWM(27,vR);

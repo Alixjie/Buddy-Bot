@@ -54,7 +54,7 @@ void timercallback(void){
    vL_current = countL-30;
 
 
-   printf("mode=%d, distance=%d, angle=%d, countR=%d, countL=%d, target_count=%d\n", mode,distance,angle,countR,countL,target_count);
+   //printf("mode=%d, distance=%d, angle=%d, countR=%d, countL=%d, target_count=%d\n", mode,distance,angle,countR,countL,target_count);
    if (mode == 0)
    {
    gpioPWM(27, 0);

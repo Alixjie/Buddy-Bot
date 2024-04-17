@@ -118,7 +118,7 @@ control_param ULM3Samples::getControl()
     result.distance = (int)result.distance;
     result.degree = -(int)result.degree;
 
-    if (result.distance < 45) {
+    if (result.distance < 20) {
         result.distance = 0;
     }
     if (result.degree < 15 && result.degree > -15) {
@@ -131,6 +131,7 @@ void ULM3Samples::controlCar()
 {
     MoveControll& mc = MoveControll::getInstance();
     while (following_) {
+        std::cout <<"Now following_ is " << following_ <<std::endl;
         control_param current_control = getControl();
         std::cout << current_control.distance << ",1 , " << current_control.degree << std::endl;
         if (current_control.distance==0) {

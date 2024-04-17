@@ -354,6 +354,7 @@ static bool process_live_input(const Settings* settings, ModelState* model_state
     Metadata* previous_metadata = NULL;
     Operation operation = Operation::NONE;
   while (true) {
+	  printf("cc1\n");
     int read_error;
     const int read_result = pa_simple_read(source_stream, source_buffer,
       source_buffer_byte_count, &read_error);
@@ -377,6 +378,7 @@ static bool process_live_input(const Settings* settings, ModelState* model_state
 
     operation = output_streaming_transcript(current_metadata, previous_metadata);
     if (operation != Operation::NONE) {
+	    printf("cc2\n");
         handle_Operation(operation);
     }
 
