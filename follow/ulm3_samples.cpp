@@ -41,6 +41,13 @@ ULM3Samples::ULM3Samples(const char* pname)
     // following_ = 0;
 }
 
+ULM3Samples& ULM3Samples::getInstance()
+{
+    char pname[] = "/dev/ttyUSB1";
+    static ULM3Samples ulm3_instance_(pname);
+    return ulm3_instance_;
+}
+
 // ULM3Samples::ULM3Samples()
 //     : /*filter_(initialize_filter()),*/
 //       sync_queue_(5),
@@ -140,14 +147,14 @@ void ULM3Samples::run_follow()
         }
         mc.SetFromAngel(current_control.degree);
         mc.sem.wait();
-	if (!following_) {
-	    break;
-	}
+        if (!following_) {
+            break;
+        }
         mc.SetFromDistance(current_control.distance);
         mc.sem.wait();
-	if (!following_) {
-	    break;
-	}
+        if (!following_) {
+            break;
+        }
     }
 }
 
@@ -190,7 +197,9 @@ void ULM3Samples::startFollow()
 
 void ULM3Samples::stopFollow()
 {
-    if (!following_) { return; }
+    if (!following_) {
+        return;
+    }
     following_ = 0;
     followThread_.join();
 }

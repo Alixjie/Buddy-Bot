@@ -19,8 +19,8 @@ typedef struct output_data {
 
 class ULM3Samples {
 public:
-    ULM3Samples(const char* pname);
     // ULM3Samples();
+    ULM3Samples& getInstance();
     ~ULM3Samples();
     void start();
     output_data getData();
@@ -38,8 +38,11 @@ private:
     // KalmanFilter filter_;
     static constexpr char default_name[] = "/dev/ttyUSB1";
     SyncQueue<control_param> sync_queue_;
+    ULM3Samples(const char* pname);
     ULM3PDOAComm ulm3_pdoa_comm_;
     ULM3AcquisitionCallback ulm3_acquisition_callback_;
+
+    static ULM3Samples ulm3_instance_;
 
     control_param getControl();
     // void (*distanceControl_)(int);
