@@ -34,19 +34,18 @@ private:
     bool isFirst_;
     // std::mutex mutex_;
     int following_;
-    // std::thread followThread;
+    std::thread followThread_;
     // KalmanFilter filter_;
     static constexpr char default_name[] = "/dev/ttyUSB1";
     SyncQueue<control_param> sync_queue_;
     ULM3PDOAComm ulm3_pdoa_comm_;
     ULM3AcquisitionCallback ulm3_acquisition_callback_;
 
-    void controlCar();
     control_param getControl();
     // void (*distanceControl_)(int);
     // void (*degreeControl_)(int);
 
-    // void run_follow();
+    void run_follow();
 };
 
 #endif
