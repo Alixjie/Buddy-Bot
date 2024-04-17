@@ -2,7 +2,7 @@
 #include "movecontrol.h"
 #include <stdlib.h>
 #include <iostream>
-
+//#include "mainwindow.h"
 
 
 MoveControll& MoveControll::getInstance() {
@@ -28,7 +28,7 @@ void MoveControll::Stop() {
 int MoveControll::SetFromOperation(Operation operation) {
     switch (operation) {
         case Operation::COME:
-            mainWindow->car_come_here();
+           // mainWindow->car_come_here();
             break;
         case Operation::LEFT:
             SetFromAngel(-90);
@@ -40,7 +40,7 @@ int MoveControll::SetFromOperation(Operation operation) {
             Stop();
             break;
         case Operation::FOLLOW:
-            mainWindow->ulm3_samples->startFollow();
+            //mainWindow->ulm3_samples->startFollow();
             break;
         case Operation::GO:
             SetFromDistance(100);

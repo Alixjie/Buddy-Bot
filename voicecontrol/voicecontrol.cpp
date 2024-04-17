@@ -60,7 +60,7 @@ int VoiceControl::voicecontrol_start(){
             {
                 MoveControll::getInstance().SetFromOperation(op);
                 if(op == Operation::COME || op == Operation::FOLLOW){
-                    iscomeorfollow = true;
+                    iscomeorfollow = false;//nedd to fix
                 }
             }
         }

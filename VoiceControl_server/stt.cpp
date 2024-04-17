@@ -38,8 +38,8 @@ extern "C" {
 
 
 
-#define SHM_NAME "/shm_vc"
-#define SEM_NAME "/sem_vc"
+#define SHM_NAME "/tmp/shm_vc"
+#define SEM_NAME "/tmp/sem_vc"
 
 static Operation* send_operation;
 static sem_t* sem;

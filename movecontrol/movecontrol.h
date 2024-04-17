@@ -4,7 +4,6 @@
 #define CARCONTROLLER_H
 #include "utils/semaphore.h"
 
-#include "mainwindow.h"
 
 enum class Operation {
     COME,
@@ -17,8 +16,8 @@ enum class Operation {
 };
 
 
-class MainWindow;
-class ULM3Samples;
+//class MainWindow;
+//class ULM3Samples;
 
 class MoveControll { 
 public:
@@ -37,8 +36,8 @@ public:
     MoveControll(const MoveControll&) = delete;
     MoveControll& operator=(const MoveControll&) = delete;
 
-    MainWindow* getMainWindow() const { return mainWindow; }
-    void setMainWindow(MainWindow *mainWindow) { this->mainWindow = mainWindow; }
+   // MainWindow* getMainWindow() const { return mainWindow; }
+    //void setMainWindow(MainWindow *mainWindow) { this->mainWindow = mainWindow; }
 
     int getMovestate() const { return movestate; }
     int getDistance() const { return Distance; }
@@ -60,13 +59,12 @@ private:
     int Distance;
     int angle;
 
-    MainWindow *mainWindow;
+   // MainWindow *mainWindow;
     
 
     std::mutex m_mutex;
 
-    MoveControll() :movestate(0), Distance(0), angle(0), sem(false) , mainWindow(nullptr){
-    }
+    MoveControll() :movestate(0), Distance(0), angle(0), sem(false){}
 
 
     void setDistance(unsigned int distance) { Distance = distance; }

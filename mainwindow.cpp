@@ -46,8 +46,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     mult = 0.5;
 
-    MoveControll& mc = MoveControll::getInstance();
-    mc.setMainWindow(this);
+    //MoveControll& mc = MoveControll::getInstance();
+    //mc.setMainWindow(this);
     //set voice control
     VoiceControl vc;
 

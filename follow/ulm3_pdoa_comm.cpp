@@ -13,9 +13,9 @@ void ULM3PDOAComm::openDev(const char* dev_name)
 
 ULM3PDOAComm::ULM3PDOAComm(const char* port_name)
 {
-    buffer.str = new char[1024];
+    buffer.str = new char[128];
     buffer.length = 0;
-    buffer.capacity = 1024;
+    buffer.capacity = 128;
 
     openDev(port_name);
     if (tcgetattr(fd_, &serial_port_setting_)) {
