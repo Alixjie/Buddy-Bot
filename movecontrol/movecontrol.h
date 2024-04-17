@@ -2,9 +2,9 @@
 
 #ifndef CARCONTROLLER_H
 #define CARCONTROLLER_H
-#include "../utils/semaphore.h"
+#include "utils/semaphore.h"
 
-#include "../mainwindow.h"
+#include "mainwindow.h"
 
 enum class Operation {
     COME,
@@ -17,7 +17,8 @@ enum class Operation {
 };
 
 
-
+class MainWindow;
+class ULM3Samples;
 
 class MoveControll { 
 public:
@@ -36,7 +37,7 @@ public:
     MoveControll(const MoveControll&) = delete;
     MoveControll& operator=(const MoveControll&) = delete;
 
-    int getMianWindow() const { return mainWindow; }
+    MainWindow* getMainWindow() const { return mainWindow; }
     void setMainWindow(MainWindow *mainWindow) { this->mainWindow = mainWindow; }
 
     int getMovestate() const { return movestate; }
@@ -49,6 +50,7 @@ public:
     int SetFromDistance(int distance);
 
     Semaphore sem;
+    void Stop();
 
     static MoveControll *instance;
 
@@ -72,7 +74,6 @@ private:
 
     void setAngle(int angle) { this->angle = angle; }
 
-    void Stop();
 
     void SetMoveState(int movestate , int Distance, int anlge);
     

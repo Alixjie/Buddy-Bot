@@ -32,6 +32,8 @@ set(LIBRARIES
     portaudio
     pulse-simple
     pulse
+    rt
+    pthread
 )
 
 add_executable(voicecontrol ${SOURCE_FILES} ${HEADER_FILES})

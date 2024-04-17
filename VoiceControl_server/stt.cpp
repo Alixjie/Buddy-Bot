@@ -79,8 +79,8 @@ int read_mode_from_file(const std::string& mode_dir) {
 void set_defaults(Settings* settings) {
 
   settings->source = const_cast<char*>("mic");
-  //settings->models_dir = "/home/group3/models/";
-  settings->models_dir = "/home/cc/work/code/Buddy-Bot/VoiceControl_server/model/";
+  settings->models_dir = "/home/group3/models/";
+  //settings->models_dir = "/home/cc/work/code/Buddy-Bot/VoiceControl_server/model/";
   std::string mode_dir = std::string(settings->models_dir) + "mode";
   settings->mode = read_mode_from_file(mode_dir);
   if (settings->mode == 0) {
@@ -291,6 +291,7 @@ void handle_Operation(Operation operation) {
 
     *send_operation = operation;
 
+
         
     int sem_value;
     do {
@@ -427,7 +428,6 @@ int main() {
     send_operation = (Operation*)mmap(0, sizeof(Operation), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
 
     sem = sem_open(SEM_NAME, O_CREAT, 0666, 0);
-
 
 
     voice_control();

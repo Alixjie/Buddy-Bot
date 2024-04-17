@@ -20,9 +20,9 @@ public slots:
 
 private:
     std::atomic<bool> vcstopFlag;
-    Qprocess *server;
     int startserver();
     int stopserver();
+    QProcess* server;
 };
 
 #endif // VOICECONTROL_H

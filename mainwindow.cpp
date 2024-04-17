@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->quit_program, &QPushButton::clicked, this, &QApplication::quit);
 
     connect(ui->voice_control_start, &QPushButton::clicked, this, &MainWindow::voice_control_start);
-    concect(ui->voice_control_stop, &QPushButton::clicked, this, &MainWindow::voice_control_stop);
+    connect(ui->voice_control_stop, &QPushButton::clicked, this, &MainWindow::voice_control_stop);
     connect(ui->start_follow, &QPushButton::clicked, this, &MainWindow::car_control_main);
     connect(ui->stop_follow, &QPushButton::clicked, this, &MainWindow::car_control_stop);
 

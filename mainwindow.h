@@ -36,6 +36,8 @@ class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget *parent = nullptr);
 
+    ULM3Samples* ulm3_samples;
+
     ~MainWindow();
 
     void paintEvent(QPaintEvent *event);
@@ -74,7 +76,6 @@ private:
 
     AStar star;
 
-    ULM3Samples* ulm3_samples;
     output_data uwb_loc;
 
     VoiceControl vc;
