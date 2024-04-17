@@ -23,20 +23,15 @@ int VoiceControl::stopserver(){
     return 0;
 }
 */
+
 int VoiceControl::voicecontrol_start(){
 
-    bool iscomeorfollow = false;
+        vcstopFlag.store(false);
+        voiceThread = std::thread(&VoiceControl::voicecontrol_run, this);
+    return 0;
+}
 
-    int shm_fd = shm_open(SHM_NAME, O_RDWR, 0666);
-    if (shm_fd == -1)
-    {
-        perror("shm_open");
-        return 1;
-    }
-    Operation* recv_operation = (Operation*)mmap(0, sizeof(Operation), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
-
-    sem_t* sem = sem_open(SEM_NAME, 0);
-
+void VoiceControl::voicecontrol_run(){
 
     /*
     int status = startserver();
@@ -45,6 +40,17 @@ int VoiceControl::voicecontrol_start(){
         return -1;
     }
     */
+    bool iscomeorfollow = false;
+
+    int shm_fd = shm_open(SHM_NAME, O_RDWR, 0666);
+    if (shm_fd == -1)
+    {
+        perror("shm_open");
+        return ;
+    }
+    Operation* recv_operation = (Operation*)mmap(0, sizeof(Operation), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+
+    sem_t* sem = sem_open(SEM_NAME, 0);
     Operation op;
     while (!vcstopFlag.load()) {
         sem_wait(sem);
@@ -76,12 +82,11 @@ int VoiceControl::voicecontrol_start(){
     close(shm_fd);
     sem_close(sem);
 
-
-    return 0;
 }
 
 int VoiceControl::voicecontrol_stop(){
     vcstopFlag.store(true);
+    voiceThread.join();
     //stopserver();
     return 0;
 }   

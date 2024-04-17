@@ -2,6 +2,7 @@
 #define VOICECONTROL_H
 
 #include <QProcess>
+#include <thread>
 
 #define sever_path = "/home/group3/model/vociecontrol"
 #define SHM_NAME "/shm_vc"
@@ -20,6 +21,9 @@ public slots:
 
 private:
     std::atomic<bool> vcstopFlag;
+    int running;
+    std::thread voiceThread;
+    void voicecontrol_run();
     int startserver();
     int stopserver();
     QProcess* server;

@@ -131,7 +131,7 @@ void ULM3Samples::run_follow()
 {
     MoveControll& mc = MoveControll::getInstance();
     while (following_) {
-        std::cout << "Now following_ is " << following_ << std::endl;
+        // std::cout << "Now following_ is " << following_ << std::endl;
         control_param current_control = getControl();
         std::cout << current_control.distance << ",1 , "
                   << current_control.degree << std::endl;
@@ -140,8 +140,14 @@ void ULM3Samples::run_follow()
         }
         mc.SetFromAngel(current_control.degree);
         mc.sem.wait();
+	if (!following_) {
+	    break;
+	}
         mc.SetFromDistance(current_control.distance);
         mc.sem.wait();
+	if (!following_) {
+	    break;
+	}
     }
 }
 

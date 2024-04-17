@@ -43,7 +43,7 @@ int MoveControll::SetFromOperation(Operation operation) {
             //mainWindow->ulm3_samples->startFollow();
             break;
         case Operation::GO:
-            SetFromDistance(10);
+            SetFromDistance(30);
             break;
 
         default:
