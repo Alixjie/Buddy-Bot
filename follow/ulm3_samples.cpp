@@ -116,17 +116,14 @@ control_param ULM3Samples::getControl()
         result.distance += weights[i] * input[i].distance;
     }
     result.distance = (int)result.distance;
-    result.degree = (int)result.degree;
+    result.degree = -(int)result.degree;
 
     if (result.distance < 45) {
         result.distance = 0;
     }
-    if (result.degree < 15 && result.degree > 0) {
-        result.degree = 15;
-    } else if (result.degree > -15 && result.degree < 0) {
-        result.degree = -15;
+    if (result.degree < 15 && result.degree > -15) {
+        result.degree = 0;
     }
-
     return result;
 }
 

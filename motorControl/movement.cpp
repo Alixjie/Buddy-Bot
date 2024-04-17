@@ -59,7 +59,7 @@ void timercallback(void){
    {
    gpioPWM(27, 0);
    gpioPWM(22, 0); 
-   if(countL == 0 | countR == 0){
+   if(countL == 0 && countR == 0){
        target_count = 0;
      // if(number==2){
          mc.sem.signal();// Set the sign of work completed
@@ -70,7 +70,7 @@ void timercallback(void){
    }
    else if(mode == 1)//go straight
    {
-      if(target_count > (18*distance)) // 10cm and longer:  target_count= 18*x(cm)
+      if(target_count >= (18*distance)) // 10cm and longer:  target_count= 18*x(cm)
       { 
          gpioPWM(27, 0); gpioPWM(22, 0); 
          target_count = 0;
@@ -82,7 +82,7 @@ void timercallback(void){
    }    
    else if(mode == 2) //spin
    {
-      if(abs(target_count)>(abs(angle)*(10/3 +0.004*abs(angle))))   // target_count= angle*10/3 + 0.004 angle*angle
+      if(abs(target_count)>=(abs(angle)*(10/3 +0.004*abs(angle))))   // target_count= angle*10/3 + 0.004 angle*angle
       {
          gpioPWM(27, 0);  gpioPWM(22, 0);
          target_count = 0;

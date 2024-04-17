@@ -27,11 +27,15 @@ int VoiceControl::voicecontrol_start(){
 
     bool iscomeorfollow = false;
 
-    int shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666);
-    ftruncate(shm_fd, sizeof(Operation));
-    Operation* send_operation = (Operation*)mmap(0, sizeof(Operation), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+    int shm_fd = shm_open(SHM_NAME, O_RDWR, 0666);
+    if (shm_fd == -1)
+    {
+        perror("shm_open");
+        return 1;
+    }
+    Operation* recv_operation = (Operation*)mmap(0, sizeof(Operation), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
 
-    sem_t* sem = sem_open(SEM_NAME, O_CREAT, 0666, 0);
+    sem_t* sem = sem_open(SEM_NAME, 0);
 
 
     /*
@@ -41,7 +45,7 @@ int VoiceControl::voicecontrol_start(){
         return -1;
     }
     */
-    Operation op = *send_operation;
+    Operation op = *recv_operation;
 
     while (!vcstopFlag.load()) {
         sem_wait(sem);
@@ -68,11 +72,9 @@ int VoiceControl::voicecontrol_start(){
 
     MoveControll::getInstance().Stop();
 
-    munmap(send_operation, sizeof(int));
+    munmap(recv_operation, sizeof(Operation));
     close(shm_fd);
-    shm_unlink(SHM_NAME);
     sem_close(sem);
-    sem_unlink(SEM_NAME);
 
 
     return 0;
