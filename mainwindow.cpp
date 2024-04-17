@@ -366,7 +366,7 @@ MainWindow::~MainWindow() {
   delay(20);
   lidar->setMotorSpeed(0);
 
-  ~ulm3_samples();
+  //~ulm3_samples();
 
   gpioSetTimerFunc(0, 0, nullptr);
   clearALL();

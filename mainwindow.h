@@ -36,7 +36,7 @@ class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget *parent = nullptr);
 
-    ULM3Samples* ulm3_samples;
+    ULM3Samples ulm3_samples;
 
     ~MainWindow();
 
