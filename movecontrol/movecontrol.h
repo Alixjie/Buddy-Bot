@@ -18,7 +18,7 @@ enum class Operation {
 // class MainWindow;
 // class ULM3Samples;
 
-class MoveControll {
+class MoveControl {
 public:
   /*
   enum MoveState {
@@ -29,10 +29,10 @@ public:
   };
   */
 
-  static MoveControll &getInstance();
+  static MoveControl &getInstance();
 
-  MoveControll(const MoveControll &) = delete;
-  MoveControll &operator=(const MoveControll &) = delete;
+  MoveControl(const MoveControl &) = delete;
+  MoveControl &operator=(const MoveControl &) = delete;
 
   // MainWindow* getMainWindow() const { return mainWindow; }
   // void setMainWindow(MainWindow *mainWindow) { this->mainWindow = mainWindow;
@@ -50,7 +50,7 @@ public:
   Semaphore sem;
   void Stop();
 
-  static MoveControll *instance;
+  static MoveControl *instance;
 
 private:
   int movestate;
@@ -61,7 +61,7 @@ private:
 
   std::mutex m_mutex;
 
-  MoveControll() : movestate(0), Distance(0), angle(0), sem(false) {}
+  MoveControl() : movestate(0), Distance(0), angle(0), sem(false) {}
 
   void setDistance(unsigned int distance) { Distance = distance; }
 
