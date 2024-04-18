@@ -9,14 +9,9 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    AStar.cpp \
     arch/linux/net_serial.cpp \
     arch/linux/net_socket.cpp \
     arch/linux/timer.cpp \
-    dataunpacker/dataunpacker.cpp \
-    dataunpacker/unpacker/handler_capsules.cpp \
-    dataunpacker/unpacker/handler_hqnode.cpp \
-    dataunpacker/unpacker/handler_normalnode.cpp \
     follow/kalman_filter.cpp \
     follow/ulm3_acquisition_callback.cpp \
     follow/ulm3_pdoa_comm.cpp \
@@ -29,30 +24,27 @@ SOURCES += \
     motorControl/movement.cpp \
     motorControl/pwm.cpp \
     movecontrol/movecontrol.cpp \
-    rplidar_driver.cpp \
-    sl_async_transceiver.cpp \
-    sl_crc.cpp \
-    sl_lidar_driver.cpp \
-    sl_lidarprotocol_codec.cpp \
-    sl_serial_channel.cpp \
-    sl_tcp_channel.cpp \
-    sl_udp_channel.cpp \
+    rplidar/AStar.cpp \
+    rplidar/dataunpacker/dataunpacker.cpp \
+    rplidar/dataunpacker/unpacker/handler_capsules.cpp \
+    rplidar/dataunpacker/unpacker/handler_hqnode.cpp \
+    rplidar/dataunpacker/unpacker/handler_normalnode.cpp \
+    rplidar/rplidar_driver.cpp \
+    rplidar/sl_async_transceiver.cpp \
+    rplidar/sl_crc.cpp \
+    rplidar/sl_lidar_driver.cpp \
+    rplidar/sl_lidarprotocol_codec.cpp \
+    rplidar/sl_serial_channel.cpp \
+    rplidar/sl_tcp_channel.cpp \
+    rplidar/sl_udp_channel.cpp \
     utils/semaphore.cpp \
     voicecontrol/voicecontrol.cpp
 
 HEADERS += \
-    AStar.h \
     arch/linux/arch_linux.h \
     arch/linux/net_serial.h \
     arch/linux/thread.hpp \
     arch/linux/timer.h \
-    dataunpacker/dataunnpacker_commondef.h \
-    dataunpacker/dataunnpacker_internal.h \
-    dataunpacker/dataunpacker.h \
-    dataunpacker/dataupacker_namespace.h \
-    dataunpacker/unpacker/handler_capsules.h \
-    dataunpacker/unpacker/handler_hqnode.h \
-    dataunpacker/unpacker/handler_normalnode.h \
     follow/kalman_filter.h \
     follow/sync_queue.h \
     follow/ulm3_acquisition_callback.h \
@@ -75,21 +67,29 @@ HEADERS += \
     motorControl/movement.hpp \
     motorControl/pwm.hpp \
     movecontrol/movecontrol.h \
-    rplidar.h \
-    rplidar_cmd.h \
-    rplidar_driver.h \
-    rplidar_protocol.h \
-    rptypes.h \
-    sdkcommon.h \
-    sl_async_transceiver.h \
-    sl_crc.h \
-    sl_lidar.h \
-    sl_lidar_cmd.h \
-    sl_lidar_driver.h \
-    sl_lidar_driver_impl.h \
-    sl_lidar_protocol.h \
-    sl_lidarprotocol_codec.h \
-    sl_types.h \
+    rplidar/AStar.h \
+    rplidar/dataunpacker/dataunnpacker_commondef.h \
+    rplidar/dataunpacker/dataunnpacker_internal.h \
+    rplidar/dataunpacker/dataunpacker.h \
+    rplidar/dataunpacker/dataupacker_namespace.h \
+    rplidar/dataunpacker/unpacker/handler_capsules.h \
+    rplidar/dataunpacker/unpacker/handler_hqnode.h \
+    rplidar/dataunpacker/unpacker/handler_normalnode.h \
+    rplidar/rplidar.h \
+    rplidar/rplidar_cmd.h \
+    rplidar/rplidar_driver.h \
+    rplidar/rplidar_protocol.h \
+    rplidar/rptypes.h \
+    rplidar/sdkcommon.h \
+    rplidar/sl_async_transceiver.h \
+    rplidar/sl_crc.h \
+    rplidar/sl_lidar.h \
+    rplidar/sl_lidar_cmd.h \
+    rplidar/sl_lidar_driver.h \
+    rplidar/sl_lidar_driver_impl.h \
+    rplidar/sl_lidar_protocol.h \
+    rplidar/sl_lidarprotocol_codec.h \
+    rplidar/sl_types.h \
     utils/semaphore.h \
     voicecontrol/voicecontrol.h
 

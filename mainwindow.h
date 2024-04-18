@@ -11,8 +11,8 @@
 #include <iomanip>
 #include <cmath>
 
-#include "sl_lidar.h"
-#include "AStar.h"
+#include "rplidar/sl_lidar.h"
+#include "rplidar/AStar.h"
 #include "follow/ulm3_samples.h"
 #include "motorControl/movement.hpp"
 #include "motorControl/encoder.hpp"
