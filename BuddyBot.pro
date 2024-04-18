@@ -9,14 +9,11 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    arch/linux/net_serial.cpp \
-    arch/linux/net_socket.cpp \
-    arch/linux/timer.cpp \
+
     follow/kalman_filter.cpp \
     follow/ulm3_acquisition_callback.cpp \
     follow/ulm3_pdoa_comm.cpp \
     follow/ulm3_samples.cpp \
-    hal/thread.cpp \
     main.cpp \
     mainwindow.cpp \
     motorControl/encoder.cpp \
@@ -25,10 +22,14 @@ SOURCES += \
     motorControl/pwm.cpp \
     movecontrol/movecontrol.cpp \
     rplidar/AStar.cpp \
+    rplidar/arch/linux/net_serial.cpp \
+    rplidar/arch/linux/net_socket.cpp \
+    rplidar/arch/linux/timer.cpp \
     rplidar/dataunpacker/dataunpacker.cpp \
     rplidar/dataunpacker/unpacker/handler_capsules.cpp \
     rplidar/dataunpacker/unpacker/handler_hqnode.cpp \
     rplidar/dataunpacker/unpacker/handler_normalnode.cpp \
+    rplidar/hal/thread.cpp \
     rplidar/rplidar_driver.cpp \
     rplidar/sl_async_transceiver.cpp \
     rplidar/sl_crc.cpp \
@@ -41,26 +42,11 @@ SOURCES += \
     voicecontrol/voicecontrol.cpp
 
 HEADERS += \
-    arch/linux/arch_linux.h \
-    arch/linux/net_serial.h \
-    arch/linux/thread.hpp \
-    arch/linux/timer.h \
     follow/kalman_filter.h \
     follow/sync_queue.h \
     follow/ulm3_acquisition_callback.h \
     follow/ulm3_pdoa_comm.h \
     follow/ulm3_samples.h \
-    hal/abs_rxtx.h \
-    hal/assert.h \
-    hal/byteops.h \
-    hal/byteorder.h \
-    hal/event.h \
-    hal/locker.h \
-    hal/socket.h \
-    hal/thread.h \
-    hal/types.h \
-    hal/util.h \
-    hal/waiter.h \
     mainwindow.h \
     motorControl/encoder.hpp \
     motorControl/motorDriver.hpp \
@@ -68,6 +54,10 @@ HEADERS += \
     motorControl/pwm.hpp \
     movecontrol/movecontrol.h \
     rplidar/AStar.h \
+    rplidar/arch/linux/arch_linux.h \
+    arch/linux/net_serial.h \
+    arch/linux/thread.hpp \
+    arch/linux/timer.h \
     rplidar/dataunpacker/dataunnpacker_commondef.h \
     rplidar/dataunpacker/dataunnpacker_internal.h \
     rplidar/dataunpacker/dataunpacker.h \
@@ -75,6 +65,17 @@ HEADERS += \
     rplidar/dataunpacker/unpacker/handler_capsules.h \
     rplidar/dataunpacker/unpacker/handler_hqnode.h \
     rplidar/dataunpacker/unpacker/handler_normalnode.h \
+    rplidar/hal/abs_rxtx.h \
+    rplidar/hal/assert.h \
+    rplidar/hal/byteops.h \
+    rplidar/hal/byteorder.h \
+    rplidar/hal/event.h \
+    rplidar/hal/locker.h \
+    rplidar/hal/socket.h \
+    rplidar/hal/thread.h \
+    rplidar/hal/types.h \
+    rplidar/hal/util.h \
+    rplidar/hal/waiter.h \
     rplidar/rplidar.h \
     rplidar/rplidar_cmd.h \
     rplidar/rplidar_driver.h \
