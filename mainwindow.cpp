@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
 
   mult = 0.5;
 
-  // MoveControll& mc = MoveControll::getInstance();
+  // MoveControl& mc = MoveControl::getInstance();
   // mc.setMainWindow(this);
   // set voice control
   VoiceControl vc;
@@ -340,7 +340,7 @@ void MainWindow::car_control_main() { ULM3Samples::getInstance().startFollow(); 
 void MainWindow::car_control_stop() { ULM3Samples::getInstance().stopFollow(); }
 
 void MainWindow::car_come_here() {
-  MoveControll &mc = MoveControll::getInstance();
+  MoveControl &mc = MoveControl::getInstance();
   std::list<Point> &returnList = star.getReturnList();
 
   for (std::list<Point>::iterator it = returnList.begin();
