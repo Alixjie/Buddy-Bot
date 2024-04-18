@@ -4,12 +4,12 @@
 #include <stdlib.h>
 // #include "mainwindow.h"
 
-MoveControll &MoveControll::getInstance() {
-  static MoveControll instance;
+MoveControl &MoveControl::getInstance() {
+  static MoveControl instance;
   return instance;
 }
 
-void MoveControll::SetMoveState(int movestate, int Distance, int anlge) {
+void MoveControl::SetMoveState(int movestate, int Distance, int anlge) {
   std::lock_guard<std::mutex> lock(m_mutex);
   setMovestate(movestate);
   setDistance(Distance);
@@ -17,9 +17,9 @@ void MoveControll::SetMoveState(int movestate, int Distance, int anlge) {
   std::cout << movestate << Distance << angle << std::endl;
 }
 
-void MoveControll::Stop() { SetMoveState(0, 0, 0); }
+void MoveControl::Stop() { SetMoveState(0, 0, 0); }
 
-int MoveControll::SetFromOperation(Operation operation) {
+int MoveControl::SetFromOperation(Operation operation) {
   switch (operation) {
   case Operation::COME:
     // mainWindow->car_come_here();
@@ -50,7 +50,7 @@ int MoveControll::SetFromOperation(Operation operation) {
 
 // wheelDistance = angle*10/3 + 0.004 angle*angle
 // abs angle should between 15 and 90, if not, the result will be not accurate
-int MoveControll::SetFromAngel(int angle) {
+int MoveControl::SetFromAngel(int angle) {
   if (angle < -90 || angle > 90) {
     return -1; // Invalid angle
   }
@@ -59,7 +59,7 @@ int MoveControll::SetFromAngel(int angle) {
 }
 
 // distance is in cm,1cm = 18 wheelDistance, should be larger than 10cm
-int MoveControll::SetFromDistance(int distance) {
+int MoveControl::SetFromDistance(int distance) {
   if (distance < 0) {
     return -1; // Invalid distance
   }

@@ -61,14 +61,14 @@ void VoiceControl::voicecontrol_run() {
       // come_stop_flag = true;
       // follow_stop_flag = true;
       ULM3Samples::getInstance().stopFollow();
-      MoveControll::getInstance().Stop();
+      MoveControl::getInstance().Stop();
       iscomeorfollow = false;
     } else {
       if (iscomeorfollow) { // normal operation cannot be executed when come or
                             // follow is running
         continue;
       } else {
-        MoveControll::getInstance().SetFromOperation(op);
+        MoveControl::getInstance().SetFromOperation(op);
         if (op == Operation::FOLLOW) {
           iscomeorfollow = true; // nedd to fix
         }
@@ -76,7 +76,7 @@ void VoiceControl::voicecontrol_run() {
     }
   }
 
-  MoveControll::getInstance().Stop();
+  MoveControl::getInstance().Stop();
 
   munmap(recv_operation, sizeof(Operation));
   close(shm_fd);

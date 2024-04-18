@@ -145,7 +145,7 @@ control_param ULM3Samples::getControl()
 
 void ULM3Samples::run_follow()
 {
-    MoveControll& mc = MoveControll::getInstance();
+    MoveControl& mc = MoveControl::getInstance();
     while (following_) {
         // std::cout << "Now following_ is " << following_ << std::endl;
         control_param current_control = getControl();
