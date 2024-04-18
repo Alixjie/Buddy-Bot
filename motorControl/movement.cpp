@@ -32,7 +32,7 @@ void callbackR(int wayR)
 
 
 void timercallback(void){
-   MoveControll& mc = MoveControll::getInstance();
+   MoveControl& mc = MoveControl::getInstance();
    //  read mode, distance and angle
    mode = mc.getMovestate();
    int distance = mc.getDistance();

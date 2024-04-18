@@ -9,7 +9,6 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-
     follow/kalman_filter.cpp \
     follow/ulm3_acquisition_callback.cpp \
     follow/ulm3_pdoa_comm.cpp \
@@ -55,9 +54,9 @@ HEADERS += \
     movecontrol/movecontrol.h \
     rplidar/AStar.h \
     rplidar/arch/linux/arch_linux.h \
-    arch/linux/net_serial.h \
-    arch/linux/thread.hpp \
-    arch/linux/timer.h \
+    rplidar/arch/linux/net_serial.h \
+    rplidar/arch/linux/thread.hpp \
+    rplidar/arch/linux/timer.h \
     rplidar/dataunpacker/dataunnpacker_commondef.h \
     rplidar/dataunpacker/dataunnpacker_internal.h \
     rplidar/dataunpacker/dataunpacker.h \

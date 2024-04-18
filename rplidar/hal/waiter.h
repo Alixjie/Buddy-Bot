@@ -9,7 +9,7 @@
 #error there is no implementation for waiter.h on AVR platforms
 #else
 
-#include "hal/event.h"
+#include "rplidar/hal/event.h"
 
 namespace rp{ namespace hal{
 

@@ -32,7 +32,7 @@
  *
  */
 
-#include "arch/linux/arch_linux.h"
+#include "rplidar/arch/linux/arch_linux.h"
 
 #include <sched.h>
 #include <sys/types.h>

@@ -38,18 +38,18 @@
 
 #pragma once
 
-#include "sdkcommon.h"
-#include "hal/abs_rxtx.h"
-#include "hal/thread.h"
-#include "hal/types.h"
-#include "hal/assert.h"
-#include "hal/locker.h"
-#include "hal/socket.h"
-#include "hal/event.h"
-#include "hal/waiter.h"
-#include "hal/byteorder.h"
-#include "sl_lidar_driver.h"
-#include "sl_crc.h" 
+#include "rplidar/sdkcommon.h"
+#include "rplidar/hal/abs_rxtx.h"
+#include "rplidar/hal/thread.h"
+#include "rplidar/hal/types.h"
+#include "rplidar/hal/assert.h"
+#include "rplidar/hal/locker.h"
+#include "rplidar/hal/socket.h"
+#include "rplidar/hal/event.h"
+#include "rplidar/hal/waiter.h"
+#include "rplidar/hal/byteorder.h"
+#include "rplidar/sl_lidar_driver.h"
+#include "rplidar/sl_crc.h"
 #include <algorithm>
 #include <memory>
 

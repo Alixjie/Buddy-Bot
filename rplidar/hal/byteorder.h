@@ -18,7 +18,7 @@
 #error "_CPU_ENDIAN_BIG and _CPU_ENDIAN_SMALL cannot be defined at the same time."
 #endif
 
-#include "hal/byteops.h"
+#include "rplidar//hal/byteops.h"
 
 #if defined(_CPU_ENDIAN_SMALL)
 
